@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "588592111690",
+    "project_id": "fit-mirror-2213d",
+    "storage_bucket": "fit-mirror-2213d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588592111690:android:ff32e197e02229604946b3",
+        "android_client_info": {
+          "package_name": "com.example.fit_mirror"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588592111690:android:a86171c3edd6af014946b3",
+        "android_client_info": {
+          "package_name": "com.example.fit_mirror_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
