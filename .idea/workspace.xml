@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
+dev-backend-final
+    <list default="true" id="2be83af3-2a7d-4007-bb5e-57f665f11a9f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/lib/provider/auth_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/provider/auth_provider.dart" afterDir="false" />
+HEAD
 dev-firebase-final
     <list default="true" id="0d22840f-acee-4082-be4d-eebec390210d" name="Changes" comment="">
+HEAD
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift" afterDir="false" />
@@ -24,10 +30,9 @@ dev-firebase-final
       <change beforePath="$PROJECT_DIR$/lib/backend/api_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/backend/api_helper.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/windows/runner/win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/windows/runner/win32_window.cpp" afterDir="false" />
   main
+      a5248a4dcefe0908eaf072d54ad51c2bcaac3d2c
+main
     </list>
-=======
-    <list default="true" id="2be83af3-2a7d-4007-bb5e-57f665f11a9f" name="Changes" comment="" />
->>>>>>> 2473616da44084340d32a6359aa337cbbf20f505
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,23 +74,23 @@ dev-firebase-final
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "dev-backend-final",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/fatima/fyp 3/Fit-Mirror-FYP",
-    "settings.editor.selected.configurable": "com.android.studio.ml.bot.mainConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev-backend-final&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/fatima/fyp 3/Fit-Mirror-FYP&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.android.studio.ml.bot.mainConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="2be83af3-2a7d-4007-bb5e-57f665f11a9f" name="Changes" comment="" />
@@ -96,10 +101,6 @@ dev-firebase-final
     </task>
     <servers />
   </component>
-<<<<<<< HEAD
-dev-firebase-final
-=======
->>>>>>> 2473616da44084340d32a6359aa337cbbf20f505
   <component name="ToolWindowManager">
     <editor active="true" />
     <layout>
@@ -111,9 +112,6 @@ dev-firebase-final
       <map>
         <entry key="MAIN">
           <value>
-<<<<<<< HEAD
-            <State />
-=======
             <State>
               <option name="FILTERS">
                 <map>
@@ -127,14 +125,9 @@ dev-firebase-final
                 </map>
               </option>
             </State>
->>>>>>> 2473616da44084340d32a6359aa337cbbf20f505
           </value>
         </entry>
       </map>
     </option>
   </component>
-<<<<<<< HEAD
- main
-=======
->>>>>>> 2473616da44084340d32a6359aa337cbbf20f505
 </project>

@@ -31,7 +31,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
+dev-frontend
               'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
+main
         );
       default:
         throw UnsupportedError(
@@ -83,4 +86,7 @@ class DefaultFirebaseOptions {
     authDomain: 'fit-mirror-2213d.firebaseapp.com',
     storageBucket: 'fit-mirror-2213d.firebasestorage.app',
   );
+dev-frontend
 }
+}
+main
