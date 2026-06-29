@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/auth_provider.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -18,7 +19,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Fit Mirror Login",
+              const Text("Fit Mirror",
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A))),
               const SizedBox(height: 30),
               TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
@@ -29,10 +30,24 @@ class LoginScreen extends StatelessWidget {
               Consumer<AuthProvider>(
                 builder: (context, auth, child) => auth.isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E3A8A), foregroundColor: Colors.white),
-                  onPressed: () => auth.login(_emailController.text, _passwordController.text, context),
-                  child: const Text("Login"),
+                    : Column(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E3A8A), foregroundColor: Colors.white),
+                      onPressed: () => auth.login(_emailController.text, _passwordController.text, context),
+                      child: const Text("Login"),
+                    ),
+                    const SizedBox(height: 15),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignupScreen()),
+                        );
+                      },
+                      child: const Text("Don't have an account? Sign Up"),
+                    ),
+                  ],
                 ),
               ),
             ],
