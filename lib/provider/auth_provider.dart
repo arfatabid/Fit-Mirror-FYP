@@ -8,6 +8,14 @@ class AuthProvider extends ChangeNotifier {
 
   // Login Function
   Future<void> login(String email, String password, BuildContext context) async {
+    // Yahan limit add karein:
+    if (password.length > 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password must be 8 characters or less")),
+      );
+      return; // Agar 8 se zyada hai to aage nahi badhega
+    }
+
     _isLoading = true;
     notifyListeners();
     try {
