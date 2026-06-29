@@ -20,7 +20,7 @@ class SignupScreen extends StatelessWidget {
               controller: _passwordController,
               obscureText: true,
               maxLength: 8, // Password limit
-              decoration: InputDecoration(labelText: 'Password (Max 8 chars)', counterText: ""),
+              decoration: InputDecoration(labelText: 'Password (Max 8 characters)', counterText: ""),
             ),
             SizedBox(height: 20),
             ElevatedButton(
