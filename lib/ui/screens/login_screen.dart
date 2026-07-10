@@ -11,47 +11,46 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 100.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Fit Mirror",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A))),
-              const SizedBox(height: 30),
-              TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
-              const SizedBox(height: 15),
-              TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder())),
-              const SizedBox(height: 25),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 80.0),
+        child: Column(
+          children: [
+            const Text("Fit Mirror",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A))),
+            const SizedBox(height: 40),
+            TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
+            const SizedBox(height: 15),
+            TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder())),
+            const SizedBox(height: 25),
 
-              Consumer<AuthProvider>(
-                builder: (context, auth, child) => auth.isLoading
-                    ? const CircularProgressIndicator()
-                    : Column(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E3A8A), foregroundColor: Colors.white),
-                      onPressed: () => auth.login(_emailController.text, _passwordController.text, context),
-                      child: const Text("Login"),
-                    ),
-                    const SizedBox(height: 15),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignupScreen()),
-                        );
-                      },
-                      child: const Text("Don't have an account? Sign Up"),
-                    ),
-                  ],
+            auth.isLoading
+                ? const CircularProgressIndicator()
+                : Column(
+              children: [
+                SizedBox(width: double.infinity, child: ElevatedButton(
+                  onPressed: () => auth.login(_emailController.text, _passwordController.text, context),
+                  child: const Text("Login"),
+                )),
+                const SizedBox(height: 15),
+
+                // Google Login Button
+                SizedBox(width: double.infinity, child: OutlinedButton.icon(
+                  icon: const Icon(Icons.login),
+                  label: const Text("Sign in with Google"),
+                  onPressed: () => auth.signInWithGoogle(context),
+                )),
+
+                TextButton(
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SignupScreen())),
+                  child: const Text("Don't have an account? Sign Up"),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );
