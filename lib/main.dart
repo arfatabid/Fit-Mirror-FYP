@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import zaroori hai
-import 'firebase_options.dart'; // Ye wahi file hai jo abhi bani hai
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
 import 'ui/screens/login_screen.dart';
 
 void main() async {
-  // Flutter binding aur Firebase initialize karna zaroori hai
-  WidgetsFlutterBinding.ensureInitialized();
 
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fit Mirror',
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: LoginScreen(),
     );
   }
