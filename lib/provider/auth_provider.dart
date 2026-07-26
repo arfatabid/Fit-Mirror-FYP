@@ -12,40 +12,47 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // Login Function
-  Future<void> login(String email, String password, BuildContext context) async {
+  Future<bool> login(String email, String password, BuildContext context) async {
     if (password.length > 8) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be 8 characters or less")));
-      return;
+      return false;
     }
 
     _isLoading = true;
     notifyListeners();
     try {
       await _authService.loginUser(email, password);
+      _isLoading = false;
+      notifyListeners();
+      return true;
     } catch (e) {
+      _isLoading = false;
+      notifyListeners();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      return false; // Login fail
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   // Signup Function
-  Future<void> signUp(String email, String password, BuildContext context) async {
+  Future<bool> signUp(String email, String password, BuildContext context) async {
     if (password.length > 8) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be 8 characters or less")));
-      return;
+      return false;
     }
 
     _isLoading = true;
     notifyListeners();
     try {
       await _authService.signUpUser(email, password);
-      Navigator.pop(context);
+      _isLoading = false;
+      notifyListeners();
+      return true; // Signup done
     } catch (e) {
+      _isLoading = false;
+      notifyListeners();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      return false; // Signup fail
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   // Google Sign-In Function
@@ -54,7 +61,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      //  Google sign in
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         _isLoading = false;
@@ -62,18 +68,14 @@ class AuthProvider extends ChangeNotifier {
         return;
       }
 
-      // Authentication
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // 3. Firebase Sign in
       await _auth.signInWithCredential(credential);
-
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Google Login Successful!")));
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Google Sign-In Error: ${e.toString()}")));
     } finally {
