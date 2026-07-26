@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/auth_provider.dart';
 import 'signup_screen.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -19,33 +20,88 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 80.0),
         child: Column(
           children: [
-            const Text("Fit Mirror",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A))),
+            const Text(
+              "Fit Mirror",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E3A8A),
+              ),
+            ),
             const SizedBox(height: 40),
-            TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 15),
-            TextField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder())),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 25),
 
             auth.isLoading
                 ? const CircularProgressIndicator()
                 : Column(
               children: [
-                SizedBox(width: double.infinity, child: ElevatedButton(
-                  onPressed: () => auth.login(_emailController.text, _passwordController.text, context),
-                  child: const Text("Login"),
-                )),
+                // Email/Password Login Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1E3A8A),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () async {
+                      bool success = await auth.login(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                        context,
+                      );
+
+                      // Login kamyab hone par HomeScreen par le jaye ga
+                      if (success && context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => HomeScreen()),
+                        );
+                      }
+                    },
+                    child: const Text("Login"),
+                  ),
+                ),
                 const SizedBox(height: 15),
 
-                // Google Login Button
-                SizedBox(width: double.infinity, child: OutlinedButton.icon(
-                  icon: const Icon(Icons.login),
-                  label: const Text("Sign in with Google"),
-                  onPressed: () => auth.signInWithGoogle(context),
-                )),
+                // Google Sign-In Button
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.login),
+                    label: const Text("Sign in with Google"),
+                    onPressed: () async {
+                      await auth.signInWithGoogle(context);
+                      if (context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => HomeScreen()),
+                        );
+                      }
+                    },
+                  ),
+                ),
 
                 TextButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SignupScreen())),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => SignupScreen()),
+                  ),
                   child: const Text("Don't have an account? Sign Up"),
                 ),
               ],
