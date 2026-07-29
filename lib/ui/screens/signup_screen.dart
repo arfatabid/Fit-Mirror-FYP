@@ -45,7 +45,7 @@ class SignupScreen extends StatelessWidget {
               controller: _passwordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: 'Password (max 8 chars)',
+                labelText: 'Password (at least 8 chars)',
                 border: OutlineInputBorder(),
               ),
             ),
