@@ -11,7 +11,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // Login Function
+  // --- Login Function ---
   Future<bool> login(String email, String password, BuildContext context) async {
     if (password.length > 8) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be 8 characters or less")));
@@ -24,16 +24,16 @@ class AuthProvider extends ChangeNotifier {
       await _authService.loginUser(email, password);
       _isLoading = false;
       notifyListeners();
-      return true;
+      return true; // Kamyab hone par true return karega
     } catch (e) {
       _isLoading = false;
       notifyListeners();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-      return false; // Login fail
+      return false;
     }
   }
 
-  // Signup Function
+  // --- Signup Function ---
   Future<bool> signUp(String email, String password, BuildContext context) async {
     if (password.length > 8) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be 8 characters or less")));
@@ -46,16 +46,16 @@ class AuthProvider extends ChangeNotifier {
       await _authService.signUpUser(email, password);
       _isLoading = false;
       notifyListeners();
-      return true; // Signup done
+      return true; // Kamyab hone par true return karega
     } catch (e) {
       _isLoading = false;
       notifyListeners();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-      return false; // Signup fail
+      return false;
     }
   }
 
-  // Google Sign-In Function
+  // --- Google Sign-In ---
   Future<void> signInWithGoogle(BuildContext context) async {
     _isLoading = true;
     notifyListeners();
