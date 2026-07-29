@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:provider/provider.dart';
-import '../../provider/auth_provider.dart';
+import '../../provider/auth_provider.dart' as custom_auth;
 import 'signup_screen.dart';
 import 'home_screen.dart';
 
@@ -12,7 +13,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<custom_auth.AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -45,7 +46,44 @@ class LoginScreen extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 5),
+
+            // Forgot Password Button
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () async {
+                  if (_emailController.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Please enter your email first to reset password")),
+                    );
+                    return;
+                  }
+                  try {
+                    await fb.FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: _emailController.text.trim(),
+                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Password reset link sent to your email!")),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Error: ${e.toString()}")),
+                      );
+                    }
+                  }
+                },
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(color: Color(0xFF1E3A8A)),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
 
             auth.isLoading
                 ? const CircularProgressIndicator()
@@ -66,7 +104,6 @@ class LoginScreen extends StatelessWidget {
                         context,
                       );
 
-                      // Login kamyab hone par HomeScreen par le jaye ga
                       if (success && context.mounted) {
                         Navigator.pushReplacement(
                           context,
