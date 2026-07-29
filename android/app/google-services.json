@@ -12,7 +12,20 @@
           "package_name": "com.example.fit_mirror"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "588592111690-huva2bbul9dq23jngqcjqj0audibs9sc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fit_mirror",
+            "certificate_hash": "bcb97130955a7f3dc795dac365a034cb1ef24c22"
+          }
+        },
+        {
+          "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "588592111690-44t8oe42r1hac2broc1ksvkpcg50v035.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fitMirrorProject"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +56,12 @@
           "package_name": "com.example.fit_mirror_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
@@ -39,7 +69,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "588592111690-44t8oe42r1hac2broc1ksvkpcg50v035.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fitMirrorProject"
+              }
+            }
+          ]
         }
       }
     }
