@@ -11,14 +11,8 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // --- Login Function ---
+  // Login Function
   Future<bool> login(String email, String password, BuildContext context) async {
-    // Requirement ke mutabiq minimum 8 characters check
-    if (password.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be at least 8 characters long")));
-      return false;
-    }
-
     _isLoading = true;
     notifyListeners();
     try {
@@ -29,15 +23,34 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+
+      // Firebase errors
+      String errorMessage = "An error occurred. Please try again.";
+      if (e is FirebaseAuthException) {
+        if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
+          errorMessage = "Incorrect email or password.";
+        } else if (e.code == 'wrong-password') {
+          errorMessage = "Incorrect password.";
+        } else if (e.code == 'invalid-email') {
+          errorMessage = "The email address is badly formatted.";
+        } else {
+          errorMessage = e.message ?? errorMessage;
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
       return false;
     }
   }
 
-  // --- Signup Function ---
+  // Signup Function (Document ke mutabiq 8 characters check)
   Future<bool> signUp(String email, String password, BuildContext context) async {
     if (password.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password must be at least 8 characters long")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password must be at least 8 characters long")),
+      );
       return false;
     }
 
@@ -51,10 +64,28 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+
+      // Firebase  main errors
+      String errorMessage = "An error occurred. Please try again.";
+      if (e is FirebaseAuthException) {
+        if (e.code == 'email-already-in-use') {
+          errorMessage = "This email is already registered. Please login instead.";
+        } else if (e.code == 'weak-password') {
+          errorMessage = "The password provided is too weak.";
+        } else if (e.code == 'invalid-email') {
+          errorMessage = "The email address is invalid.";
+        } else {
+          errorMessage = e.message ?? errorMessage;
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
       return false;
     }
   }
+
   // Google Sign-In Function
   Future<void> signInWithGoogle(BuildContext context) async {
     _isLoading = true;
