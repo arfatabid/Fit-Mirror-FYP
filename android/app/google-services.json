@@ -1,85 +1,35 @@
 {
   "project_info": {
-    "project_number": "588592111690",
-    "project_id": "fit-mirror-2213d",
-    "storage_bucket": "fit-mirror-2213d.firebasestorage.app"
+    "project_number": "276799056898",
+    "firebase_url": "https://fitmirrorfyp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fitmirrorfyp",
+    "storage_bucket": "fitmirrorfyp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:588592111690:android:ff32e197e02229604946b3",
+        "mobilesdk_app_id": "1:276799056898:android:fccc3c7d6ecae63f120b1b",
         "android_client_info": {
           "package_name": "com.example.fit_mirror"
         }
       },
       "oauth_client": [
         {
-          "client_id": "588592111690-huva2bbul9dq23jngqcjqj0audibs9sc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.fit_mirror",
-            "certificate_hash": "bcb97130955a7f3dc795dac365a034cb1ef24c22"
-          }
-        },
-        {
-          "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+          "client_id": "276799056898-r6u04gf1hc9mgupsio7ste0nc2ff8e8r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
+          "current_key": "AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
+              "client_id": "276799056898-r6u04gf1hc9mgupsio7ste0nc2ff8e8r.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "588592111690-44t8oe42r1hac2broc1ksvkpcg50v035.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fitMirrorProject"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:588592111690:android:a86171c3edd6af014946b3",
-        "android_client_info": {
-          "package_name": "com.example.fit_mirror_project"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "588592111690-p0487olua9pqbc7v9csv2h0oiool9mds.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "588592111690-44t8oe42r1hac2broc1ksvkpcg50v035.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fitMirrorProject"
-              }
             }
           ]
         }
