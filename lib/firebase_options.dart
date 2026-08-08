@@ -1,7 +1,9 @@
+// File generated
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+/// Default
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -29,46 +31,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCO7QG94M7ZMzbAADxFmsht-CIkvPddxTI',
-    appId: '1:588592111690:web:e5cf215238a4bef74946b3',
-    messagingSenderId: '588592111690',
-    projectId: 'fit-mirror-2213d',
-    authDomain: 'fit-mirror-2213d.firebaseapp.com',
-    storageBucket: 'fit-mirror-2213d.firebasestorage.app',
+    apiKey: 'AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w',
+    appId: '1:276799056898:web:e5cf215238a4bef74946b3',
+    messagingSenderId: '276799056898',
+    projectId: 'fitmirrorfyp',
+    authDomain: 'fitmirrorfyp.firebaseapp.com',
+    storageBucket: 'fitmirrorfyp.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBXhjeAb8RPmT0naiRDXXm2zvi5Y1OS1ZU',
-    appId: '1:588592111690:android:a86171c3edd6af014946b3',
-    messagingSenderId: '588592111690',
-    projectId: 'fit-mirror-2213d',
-    storageBucket: 'fit-mirror-2213d.firebasestorage.app',
+    apiKey: 'AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w',
+    appId: '1:276799056898:android:fccc3c7d6ecae63f120b1b',
+    messagingSenderId: '276799056898',
+    projectId: 'fitmirrorfyp',
+    storageBucket: 'fitmirrorfyp.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC5sb7H2fVqzhPQSF7CjGU-SP8KY_LxD88',
-    appId: '1:588592111690:ios:1e7ea77e10b1e9fb4946b3',
-    messagingSenderId: '588592111690',
-    projectId: 'fit-mirror-2213d',
-    storageBucket: 'fit-mirror-2213d.firebasestorage.app',
+    apiKey: 'AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w',
+    appId: '1:276799056898:ios:1e7ea77e10b1e9fb4946b3',
+    messagingSenderId: '276799056898',
+    projectId: 'fitmirrorfyp',
+    storageBucket: 'fitmirrorfyp.firebasestorage.app',
     iosBundleId: 'com.example.fitMirrorProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC5sb7H2fVqzhPQSF7CjGU-SP8KY_LxD88',
-    appId: '1:588592111690:ios:1e7ea77e10b1e9fb4946b3',
-    messagingSenderId: '588592111690',
-    projectId: 'fit-mirror-2213d',
-    storageBucket: 'fit-mirror-2213d.firebasestorage.app',
+    apiKey: 'AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w',
+    appId: '1:276799056898:ios:1e7ea77e10b1e9fb4946b3',
+    messagingSenderId: '276799056898',
+    projectId: 'fitmirrorfyp',
+    storageBucket: 'fitmirrorfyp.firebasestorage.app',
     iosBundleId: 'com.example.fitMirrorProject',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCO7QG94M7ZMzbAADxFmsht-CIkvPddxTI',
-    appId: '1:588592111690:web:c2232a26b2222d4e4946b3',
-    messagingSenderId: '588592111690',
-    projectId: 'fit-mirror-2213d',
-    authDomain: 'fit-mirror-2213d.firebaseapp.com',
-    storageBucket: 'fit-mirror-2213d.firebasestorage.app',
+    apiKey: 'AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w',
+    appId: '1:276799056898:web:c2232a26b2222d4e4946b3',
+    messagingSenderId: '276799056898',
+    projectId: 'fitmirrorfyp',
+    authDomain: 'fitmirrorfyp.firebaseapp.com',
+    storageBucket: 'fitmirrorfyp.firebasestorage.app',
   );
 }
