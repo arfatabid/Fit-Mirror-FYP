@@ -30,6 +30,57 @@
             {
               "client_id": "276799056898-r6u04gf1hc9mgupsio7ste0nc2ff8e8r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "276799056898-fdgmgscs3e0u7l6ospo7a78jnjanaokk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fitMirrorProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276799056898:android:bc6369d705bd3592120b1b",
+        "android_client_info": {
+          "package_name": "com.example.fit_mirror_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276799056898-s0r5hm7iloahfr2r8dd18hi08laf1clr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fit_mirror_project",
+            "certificate_hash": "18096a411c12a8bb70c3ccd8c5d8599db5d7d55c"
+          }
+        },
+        {
+          "client_id": "276799056898-r6u04gf1hc9mgupsio7ste0nc2ff8e8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP4p-hG8fu0_6qulOVDubpD1TtDD5MR1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276799056898-r6u04gf1hc9mgupsio7ste0nc2ff8e8r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276799056898-fdgmgscs3e0u7l6ospo7a78jnjanaokk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fitMirrorProject"
+              }
             }
           ]
         }
