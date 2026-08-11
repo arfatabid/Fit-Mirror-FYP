@@ -51,6 +51,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "276799056898-314lhq1u94d9tlsrn8u888bhl490mqkl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fit_mirror_project",
+            "certificate_hash": "77c66536ac17c6ef0d5efde02b6a9def7dc30121"
+          }
+        },
+        {
           "client_id": "276799056898-7acvbrflkrcfigfee00o9pje7op36rgm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
