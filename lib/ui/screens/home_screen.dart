@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_screen.dart';
 import 'virtual_try_on_screen.dart';
 
 class HomeScreen extends StatefulWidget {
