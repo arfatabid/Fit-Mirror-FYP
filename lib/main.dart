@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
-import 'ui/screens/login_screen.dart';
+import 'ui/screens/splash_screen.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fit Mirror',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }
