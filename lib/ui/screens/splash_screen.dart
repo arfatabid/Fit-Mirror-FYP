@@ -12,13 +12,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // 7 seconds
-    Future.delayed(const Duration(seconds: 7), () {
-      Navigator.pushReplacement(
-        context,
-
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
+    // 6 seconds delay
+    Future.delayed(const Duration(seconds: 6), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()), // Yahan se 'const' hata diya hai
+        );
+      }
     });
   }
 
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
         height: size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/splash_screen.jpeg'),
+            image: AssetImage('assets/images/splash_bg.jpeg'),
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
