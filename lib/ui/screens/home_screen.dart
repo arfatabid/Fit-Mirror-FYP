@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true, // for strecthing image
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -47,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background.jpeg'),
@@ -54,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
+          bottom: false,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Column(
@@ -157,59 +161,69 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildCategoryItem("Suits", Icons.person, primaryPurple),
                   ],
                 ),
-                const SizedBox(height: 20),
+
+                // Extra Space for Bottom Bar
+                const SizedBox(height: 110),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.3), // Light transparent overlay
+            border: Border(
+              top: BorderSide(
+                color: primaryPurple.withOpacity(0.15),
+                width: 1,
+              ),
+            ),
+          ),
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: primaryPurple, // Primary Purple matching theme
+            unselectedItemColor: primaryPurple.withOpacity(0.5),
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
 
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VirtualTryOnScreen()),
-              );
-            }
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          selectedItemColor: accentPink,
-          unselectedItemColor: Colors.grey,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_filled),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.support_agent),
-              label: 'Assistant',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt),
-              label: 'Try-On',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.checkroom),
-              label: 'Wardrobe',
-            ),
-          ],
+              if (index == 2) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VirtualTryOnScreen()),
+                );
+              }
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_filled),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.support_agent),
+                label: 'Assistant',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.camera_alt),
+                label: 'Try-On',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.checkroom),
+                label: 'Wardrobe',
+              ),
+            ],
+          ),
         ),
       ),
     );
