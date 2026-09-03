@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      extendBody: true, // for strecthing image
+      extendBody: true, // Allows background image to extend behind navigation bar
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -162,73 +163,62 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-                // Extra Space for Bottom Bar
+                // Padding at bottom to avoid overlapping content with navigation bar
                 const SizedBox(height: 110),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.3), // Light transparent overlay
-            border: Border(
-              top: BorderSide(
-                color: primaryPurple.withOpacity(0.15),
-                width: 1,
-              ),
-            ),
+      // Floating Curved Navigation Bar Configuration
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _currentIndex,
+        height: 60.0,
+        items: <Widget>[
+          Icon(
+            Icons.home_filled,
+            size: 28,
+            color: _currentIndex == 0 ? Colors.white : primaryPurple.withOpacity(0.7),
           ),
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: primaryPurple, // Primary Purple matching theme
-            unselectedItemColor: primaryPurple.withOpacity(0.5),
-            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
+          Icon(
+            Icons.support_agent,
+            size: 28,
+            color: _currentIndex == 1 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+          Icon(
+            Icons.camera_alt,
+            size: 28,
+            color: _currentIndex == 2 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+          Icon(
+            Icons.checkroom,
+            size: 28,
+            color: _currentIndex == 3 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+        ],
+        color: Colors.white, // Navigation bar background color
+        buttonBackgroundColor: primaryPurple, // Floating circle button background color
+        backgroundColor: Colors.transparent, // Keeps app background visible behind curve
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
 
-              if (index == 2) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const VirtualTryOnScreen()),
-                );
-              }
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.support_agent),
-                label: 'Assistant',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.camera_alt),
-                label: 'Try-On',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.checkroom),
-                label: 'Wardrobe',
-              ),
-            ],
-          ),
-        ),
+          // Navigate to Virtual Try-On screen on selecting camera icon (index 2)
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const VirtualTryOnScreen()),
+            );
+          }
+        },
       ),
     );
   }
 
+  // Widget builder for brand icons
   Widget _buildBrandItem(String name, IconData icon) {
     return Column(
       children: [
@@ -258,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Widget builder for category cards
   Widget _buildCategoryItem(String name, IconData icon, Color bgColor) {
     return Expanded(
       child: Container(
