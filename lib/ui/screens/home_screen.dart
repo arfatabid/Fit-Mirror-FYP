@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Top Brands Section
+                // Top Brands Section (Updated with Images)
                 const Text(
                   "Top Brands",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
@@ -164,10 +164,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      _buildBrandItem("Ideas", Icons.checkroom, const Color(0xFFFCE4EC), accentPink),
-                      _buildBrandItem("Breakout", Icons.style, const Color(0xFFFFF3E0), Colors.orange),
-                      _buildBrandItem("Outfitters", Icons.groups, const Color(0xFFE3F2FD), Colors.blue),
-                      _buildBrandItem("Chase Value", Icons.storefront, const Color(0xE8E8F8E8), Colors.green),
+                      _buildBrandItemWithImage("Ideas", "assets/images/ideas.png"),
+                      _buildBrandItemWithImage("Breakout", "assets/images/breakout.png"),
+                      _buildBrandItemWithImage("Outfitters", "assets/images/outfitters.png"),
+                      _buildBrandItemWithImage("Chase Value", "assets/images/chasevalue.png"),
                     ],
                   ),
                 ),
@@ -262,8 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Brand Circle Item Builder
-  Widget _buildBrandItem(String title, IconData icon, Color bgColor, Color iconColor) {
+  // Brand Circle Item Builder with Image
+  Widget _buildBrandItemWithImage(String title, String imagePath) {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: Column(
@@ -271,11 +271,27 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             width: 58,
             height: 58,
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: bgColor,
+              color: Colors.white,
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: Icon(icon, color: iconColor, size: 26),
+            child: ClipOval(
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.store, color: primaryPurple, size: 28);
+                },
+              ),
+            ),
           ),
           const SizedBox(height: 6),
           Text(
