@@ -224,14 +224,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Dresses",
-                        imagePath: "assets/images/dresses.png", // Updated for Women Dresses
+                        imagePath: "assets/images/dresses.png",
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: _buildCategoryCard(
                         "Suits",
-                        icon: Icons.checkroom_outlined,
+                        imagePath: "assets/images/suits.png", // Updated Suits Image
                       ),
                     ),
                   ],
