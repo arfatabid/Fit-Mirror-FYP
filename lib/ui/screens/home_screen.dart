@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Shirts",
-                        icon: Icons.checkroom,
+                        imagePath: "assets/images/shirt.png", // Updated for Shirt Image
                       ),
                     ),
                   ],
