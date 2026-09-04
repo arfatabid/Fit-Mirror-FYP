@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Shirts",
-                        imagePath: "assets/images/shirt.png", // Updated for Shirt Image
+                        imagePath: "assets/images/shirt.png",
                       ),
                     ),
                   ],
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Dresses",
-                        icon: Icons.style,
+                        imagePath: "assets/images/dresses.png", // Updated for Women Dresses
                       ),
                     ),
                     const SizedBox(width: 16),
