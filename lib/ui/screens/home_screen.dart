@@ -1,8 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'login_screen.dart';
-import 'virtual_try_on_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,40 +10,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  final Color primaryPurple = const Color(0xFF4A2E7A);
+  final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      extendBody: true, // Allows background image to extend behind navigation bar
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        automaticallyImplyLeading: false, // Left side 3 bars/drawer icon remove karne ke liye
+        title: Text(
           "Fit Mirror",
-          style: TextStyle(color: Color(0xFF4A2E7A), fontWeight: FontWeight.bold, fontSize: 22),
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: primaryPurple.withOpacity(0.1),
-              ),
-              child: Icon(Icons.logout, color: primaryPurple),
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
-              );
-            },
+          style: TextStyle(
+            color: primaryPurple,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
           ),
-          const SizedBox(width: 8),
-        ],
+        ),
+        centerTitle: true,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -60,117 +44,185 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome Section
-                const Text(
-                  "Welcome Back,",
-                  style: TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  "arfatabid19@gmail.com",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: primaryPurple,
+                // Search Bar
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFFE1BEE7).withOpacity(0.4),
+                        Colors.white.withOpacity(0.9),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: primaryPurple.withOpacity(0.12)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryPurple.withOpacity(0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search for products, brands a...",
+                      hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                      prefixIcon: Icon(Icons.search, color: primaryPurple),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Search Bar
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search clothes, brands, styles...",
-                    hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: primaryPurple),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.9),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: accentPink.withOpacity(0.3)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: accentPink.withOpacity(0.3)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: accentPink, width: 1.5),
-                    ),
+                // Promotional Banner Card
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3E5F5).withOpacity(0.92),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryPurple.withOpacity(0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "New Collection",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: primaryPurple,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              "Elevate Your\nEveryday Style",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                                height: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Trendy picks, top brands &\nexclusive deals.",
+                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+                            ),
+                            const SizedBox(height: 14),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryPurple,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                elevation: 0,
+                              ),
+                              child: const Text(
+                                "Shop Now",
+                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Icon(Icons.shopping_bag, size: 85, color: primaryPurple.withOpacity(0.85)),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 24),
 
-                // Brand Catalog Section
-                Text(
-                  "Browse Product Catalog by Brands",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: primaryPurple,
-                  ),
+                // Top Brands Section
+                const Text(
+                  "Top Brands",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
                 ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildBrandItem("Ideas", Icons.design_services),
-                    _buildBrandItem("Outfitters", Icons.group),
-                    _buildBrandItem("Brand C", Icons.radio_button_unchecked),
-                    _buildBrandItem("Brand D", Icons.texture),
-                  ],
-                ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 14),
 
-                // Category - Men Section
-                Text(
-                  "Shop by Category - Men",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: primaryPurple,
+                SizedBox(
+                  height: 90,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buildBrandItem("Ideas", Icons.checkroom, const Color(0xFFFCE4EC), accentPink),
+                      _buildBrandItem("Breakout", Icons.style, const Color(0xFFFFF3E0), Colors.orange),
+                      _buildBrandItem("Outfitters", Icons.groups, const Color(0xFFE3F2FD), Colors.blue),
+                      _buildBrandItem("Chase Value", Icons.storefront, const Color(0xE8E8F8E8), Colors.green),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
+
+                // Men Category Section
+                Center(
+                  child: Text(
+                    "Men Category",
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: primaryPurple,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 Row(
                   children: [
-                    _buildCategoryItem("Shalwar Kameez", Icons.accessibility_new, const Color(0xFF00B0FF)),
+                    Expanded(child: _buildCategoryCard("Shalwar Kameez", Icons.dry_cleaning)),
                     const SizedBox(width: 16),
-                    _buildCategoryItem("Shirts", Icons.checkroom, primaryPurple),
+                    Expanded(child: _buildCategoryCard("Shirts", Icons.checkroom)),
                   ],
                 ),
-                const SizedBox(height: 25),
 
-                // Category - Women Section
-                Text(
-                  "Shop by Category - Women",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: primaryPurple,
+                const SizedBox(height: 28),
+
+                // Women Category Section
+                Center(
+                  child: Text(
+                    "Women Category",
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: primaryPurple,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
+
                 Row(
                   children: [
-                    _buildCategoryItem("Dresses", Icons.female, accentPink),
+                    Expanded(child: _buildCategoryCard("Dresses", Icons.style)),
                     const SizedBox(width: 16),
-                    _buildCategoryItem("Suits", Icons.person, primaryPurple),
+                    Expanded(child: _buildCategoryCard("Suits", Icons.checkroom_outlined)),
                   ],
                 ),
 
-                // Padding at bottom to avoid overlapping content with navigation bar
                 const SizedBox(height: 110),
               ],
             ),
           ),
         ),
       ),
-      // Floating Curved Navigation Bar Configuration
       bottomNavigationBar: CurvedNavigationBar(
         index: _currentIndex,
         height: 60.0,
@@ -196,89 +248,90 @@ class _HomeScreenState extends State<HomeScreen> {
             color: _currentIndex == 3 ? Colors.white : primaryPurple.withOpacity(0.7),
           ),
         ],
-        color: Colors.white, // Navigation bar background color
-        buttonBackgroundColor: primaryPurple, // Floating circle button background color
-        backgroundColor: Colors.transparent, // Keeps app background visible behind curve
+        color: Colors.white,
+        buttonBackgroundColor: primaryPurple,
+        backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
-
-          // Navigate to Virtual Try-On screen on selecting camera icon (index 2)
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const VirtualTryOnScreen()),
-            );
-          }
         },
       ),
     );
   }
 
-  // Widget builder for brand icons
-  Widget _buildBrandItem(String name, IconData icon) {
-    return Column(
-      children: [
-        Container(
-          width: 65,
-          height: 65,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: primaryPurple.withOpacity(0.4), width: 1.5),
-            color: Colors.white.withOpacity(0.95),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.purple.withOpacity(0.08),
-                blurRadius: 6,
-                offset: const Offset(0, 3),
-              ),
-            ],
+  // Brand Circle Item Builder
+  Widget _buildBrandItem(String title, IconData icon, Color bgColor, Color iconColor) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: Column(
+        children: [
+          Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 26),
           ),
-          child: Icon(icon, color: primaryPurple, size: 28),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          name,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black87),
+          ),
+        ],
+      ),
     );
   }
 
-  // Widget builder for category cards
-  Widget _buildCategoryItem(String name, IconData icon, Color bgColor) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: bgColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+  // Category Card Builder
+  Widget _buildCategoryCard(String title, IconData icon) {
+    return Container(
+      height: 180,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Icon(Icons.favorite_border, size: 18, color: Colors.grey.shade400),
+          ),
+          Expanded(
+            child: Center(
+              child: Icon(
+                icon,
+                size: 70,
+                color: primaryPurple,
               ),
             ),
-          ],
-        ),
+          ),
+          Center(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+        ],
       ),
     );
   }
