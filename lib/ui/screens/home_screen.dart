@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Left side 3 bars/drawer icon remove karne ke liye
+        automaticallyImplyLeading: false, // Left side drawer icon remove karne ke liye
         title: Text(
           "Fit Mirror",
           style: TextStyle(
@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Top Brands Section (Updated with Images)
+                // Top Brands Section
                 const Text(
                   "Top Brands",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
@@ -188,9 +188,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 Row(
                   children: [
-                    Expanded(child: _buildCategoryCard("Shalwar Kameez", Icons.dry_cleaning)),
+                    Expanded(
+                      child: _buildCategoryCard(
+                        "Shalwar Kameez",
+                        imagePath: "assets/images/shalwar_kameez.png",
+                      ),
+                    ),
                     const SizedBox(width: 16),
-                    Expanded(child: _buildCategoryCard("Shirts", Icons.checkroom)),
+                    Expanded(
+                      child: _buildCategoryCard(
+                        "Shirts",
+                        icon: Icons.checkroom,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -211,9 +221,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 Row(
                   children: [
-                    Expanded(child: _buildCategoryCard("Dresses", Icons.style)),
+                    Expanded(
+                      child: _buildCategoryCard(
+                        "Dresses",
+                        icon: Icons.style,
+                      ),
+                    ),
                     const SizedBox(width: 16),
-                    Expanded(child: _buildCategoryCard("Suits", Icons.checkroom_outlined)),
+                    Expanded(
+                      child: _buildCategoryCard(
+                        "Suits",
+                        icon: Icons.checkroom_outlined,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -303,11 +323,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Category Card Builder
-  Widget _buildCategoryCard(String title, IconData icon) {
+  // Updated Category Card Builder (Box Full Cover)
+  Widget _buildCategoryCard(String title, {IconData? icon, String? imagePath}) {
     return Container(
       height: 180,
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.95),
         borderRadius: BorderRadius.circular(20),
@@ -319,35 +338,87 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Icon(Icons.favorite_border, size: 18, color: Colors.grey.shade400),
-          ),
-          Expanded(
-            child: Center(
-              child: Icon(
-                icon,
-                size: 70,
-                color: primaryPurple,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            // Image / Icon
+            Positioned.fill(
+              child: imagePath != null
+                  ? Image.asset(
+                imagePath,
+                fit: BoxFit.cover, // Pure box par fill kar ne ke liye
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Icon(
+                      icon ?? Icons.dry_cleaning,
+                      size: 65,
+                      color: primaryPurple,
+                    ),
+                  );
+                },
+              )
+                  : Center(
+                child: Icon(
+                  icon ?? Icons.dry_cleaning,
+                  size: 65,
+                  color: primaryPurple,
+                ),
               ),
             ),
-          ),
-          Center(
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+
+            // Gradient Overlay for readable text on image
+            if (imagePath != null)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.65),
+                      ],
+                      stops: const [0.4, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+
+            // Favorite Icon Top Right
+            Positioned(
+              top: 10,
+              right: 10,
+              child: CircleAvatar(
+                radius: 14,
+                backgroundColor: imagePath != null
+                    ? Colors.white.withOpacity(0.8)
+                    : Colors.transparent,
+                child: Icon(
+                  Icons.favorite_border,
+                  size: 16,
+                  color: imagePath != null ? Colors.black87 : Colors.grey.shade400,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-        ],
+
+            // Title Text Bottom Center
+            Positioned(
+              bottom: 12,
+              left: 8,
+              right: 8,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: imagePath != null ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
