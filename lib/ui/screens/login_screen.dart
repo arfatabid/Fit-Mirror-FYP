@@ -106,12 +106,7 @@ class LoginScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
-                    suffixText: 'FORGOT',
-                    suffixStyle: const TextStyle(
-                      color: Color(0xFF8B5CF6),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
