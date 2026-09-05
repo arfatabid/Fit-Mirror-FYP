@@ -9,7 +9,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0; // Home icon (0) float hoga
+  int _currentIndex = 0; // Set Home icon as default active tab
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Left side drawer icon remove karne ke liye
+        automaticallyImplyLeading: false, // Hide back button / drawer icon
         title: Text(
           "Fit Mirror",
           style: TextStyle(
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search Bar
+                // Search Bar Section
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Promotional Banner Card (Full Image Box without Text & Button)
+                // Main Banner Section
                 Container(
                   width: double.infinity,
                   height: 160,
@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-                // Navigation Bar ke neche content jhanke nahi, isliye height 160 di hai
+                // Bottom spacing to prevent navigation bar overlap
                 const SizedBox(height: 160),
               ],
             ),
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: _currentIndex, // Starting state Home icon
+        index: _currentIndex,
         height: 60.0,
         items: <Widget>[
           Icon(
@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Brand Circle Item Builder with Image
+  // Helper widget to display brand circles
   Widget _buildBrandItemWithImage(String title, String imagePath) {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
@@ -286,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Updated Category Card Builder (Box Full Cover)
+  // Helper widget to display category cards
   Widget _buildCategoryCard(String title, {IconData? icon, String? imagePath}) {
     return Container(
       height: 180,
@@ -305,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
         child: Stack(
           children: [
-            // Image / Icon
+            // Background Image
             Positioned.fill(
               child: imagePath != null
                   ? Image.asset(
@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Gradient Overlay for readable text on image
+            // Gradient Overlay for text readability
             if (imagePath != null)
               Positioned.fill(
                 child: Container(
@@ -348,24 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-            // Favorite Icon Top Right
-            Positioned(
-              top: 10,
-              right: 10,
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor: imagePath != null
-                    ? Colors.white.withOpacity(0.8)
-                    : Colors.transparent,
-                child: Icon(
-                  Icons.favorite_border,
-                  size: 16,
-                  color: imagePath != null ? Colors.black87 : Colors.grey.shade400,
-                ),
-              ),
-            ),
-
-            // Title Text Bottom Center
+            // Category Title Text
             Positioned(
               bottom: 12,
               left: 8,
