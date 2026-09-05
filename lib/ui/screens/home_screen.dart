@@ -82,12 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Promotional Banner Card
+                // Promotional Banner Card (Full Image Box without Text & Button)
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  height: 160, // Aap apni pasand ke hisab se height adjust kar sakti hain
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3E5F5).withOpacity(0.92),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -97,57 +96,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "New Collection",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: primaryPurple,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              "Elevate Your\nEveryday Style",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                                height: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "Trendy picks, top brands &\nexclusive deals.",
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
-                            ),
-                            const SizedBox(height: 14),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryPurple,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                elevation: 0,
-                              ),
-                              child: const Text(
-                                "Shop Now",
-                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Icon(Icons.shopping_bag, size: 85, color: primaryPurple.withOpacity(0.85)),
-                    ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      "assets/images/banner_image.png", // Image path check kar lein
+                      fit: BoxFit.cover, // Pure box par fill karne ke liye
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: const Color(0xFFF3E5F5),
+                          child: Center(
+                            child: Icon(Icons.image, size: 50, color: primaryPurple),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -231,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Suits",
-                        imagePath: "assets/images/suits.png", // Updated Suits Image
+                        imagePath: "assets/images/suits.png",
                       ),
                     ),
                   ],
@@ -347,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: imagePath != null
                   ? Image.asset(
                 imagePath,
-                fit: BoxFit.cover, // Pure box par fill kar ne ke liye
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Center(
                     child: Icon(
