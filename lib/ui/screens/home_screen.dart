@@ -9,7 +9,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 0; // Home icon (0) float hoga
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Promotional Banner Card (Full Image Box without Text & Button)
                 Container(
                   width: double.infinity,
-                  height: 160, // Aap apni pasand ke hisab se height adjust kar sakti hain
+                  height: 160,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -99,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.asset(
-                      "assets/images/banner_image.png", // Image path check kar lein
-                      fit: BoxFit.cover, // Pure box par fill karne ke liye
+                      "assets/images/banner_image.png",
+                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: const Color(0xFFF3E5F5),
@@ -199,14 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 110),
+                // Navigation Bar ke neche content jhanke nahi, isliye height 160 di hai
+                const SizedBox(height: 160),
               ],
             ),
           ),
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: _currentIndex,
+        index: _currentIndex, // Starting state Home icon
         height: 60.0,
         items: <Widget>[
           Icon(
