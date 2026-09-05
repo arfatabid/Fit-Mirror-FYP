@@ -9,7 +9,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 0; // Set Home icon as default active tab
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Left side drawer icon remove karne ke liye
+        automaticallyImplyLeading: false, // Hide back button / drawer icon
         title: Text(
           "Fit Mirror",
           style: TextStyle(
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search Bar
+                // Search Bar Section
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
@@ -82,12 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Promotional Banner Card
+                // Main Banner Section
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  height: 160,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3E5F5).withOpacity(0.92),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -97,57 +96,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "New Collection",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: primaryPurple,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              "Elevate Your\nEveryday Style",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                                height: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "Trendy picks, top brands &\nexclusive deals.",
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
-                            ),
-                            const SizedBox(height: 14),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryPurple,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                elevation: 0,
-                              ),
-                              child: const Text(
-                                "Shop Now",
-                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Icon(Icons.shopping_bag, size: 85, color: primaryPurple.withOpacity(0.85)),
-                    ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      "assets/images/banner_image.png",
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: const Color(0xFFF3E5F5),
+                          child: Center(
+                            child: Icon(Icons.image, size: 50, color: primaryPurple),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -231,13 +193,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _buildCategoryCard(
                         "Suits",
-                        imagePath: "assets/images/suits.png", // Updated Suits Image
+                        imagePath: "assets/images/suits.png",
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 110),
+                // Bottom spacing to prevent navigation bar overlap
+                const SizedBox(height: 160),
               ],
             ),
           ),
@@ -282,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Brand Circle Item Builder with Image
+  // Helper widget to display brand circles
   Widget _buildBrandItemWithImage(String title, String imagePath) {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
@@ -323,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Updated Category Card Builder (Box Full Cover)
+  // Helper widget to display category cards
   Widget _buildCategoryCard(String title, {IconData? icon, String? imagePath}) {
     return Container(
       height: 180,
@@ -342,12 +305,12 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
         child: Stack(
           children: [
-            // Image / Icon
+            // Background Image
             Positioned.fill(
               child: imagePath != null
                   ? Image.asset(
                 imagePath,
-                fit: BoxFit.cover, // Pure box par fill kar ne ke liye
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Center(
                     child: Icon(
@@ -367,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Gradient Overlay for readable text on image
+            // Gradient Overlay for text readability
             if (imagePath != null)
               Positioned.fill(
                 child: Container(
@@ -385,24 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-            // Favorite Icon Top Right
-            Positioned(
-              top: 10,
-              right: 10,
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor: imagePath != null
-                    ? Colors.white.withOpacity(0.8)
-                    : Colors.transparent,
-                child: Icon(
-                  Icons.favorite_border,
-                  size: 16,
-                  color: imagePath != null ? Colors.black87 : Colors.grey.shade400,
-                ),
-              ),
-            ),
-
-            // Title Text Bottom Center
+            // Category Title Text
             Positioned(
               bottom: 12,
               left: 8,
