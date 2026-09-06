@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'brand_catalog_screen.dart'; // Brand catalog screen ko import kiya hai
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -245,43 +246,54 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Helper widget to display brand circles
+  // Helper widget to display brand circles (Ab yeh clickable hain)
   Widget _buildBrandItemWithImage(String title, String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20.0),
-      child: Column(
-        children: [
-          Container(
-            width: 58,
-            height: 58,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        // Jab user kisi brand par click kare ga toh sirf usi brand ki items screen khule gi
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BrandCatalogScreen(brandName: title),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20.0),
+        child: Column(
+          children: [
+            Container(
+              width: 58,
+              height: 58,
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.store, color: primaryPurple, size: 28);
+                  },
                 ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.store, color: primaryPurple, size: 28);
-                },
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black87),
-          ),
-        ],
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black87),
+            ),
+          ],
+        ),
       ),
     );
   }
