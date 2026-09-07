@@ -28,4 +28,8 @@ flutter:
   assets:
     - assets/images/
     - assets/Brands/
+    - assets/Brands/Ideas/
+    - assets/Brands/Outfitters/
+    - assets/Brands/Chase Value/
+    - assets/Brands/Breakout/
 
