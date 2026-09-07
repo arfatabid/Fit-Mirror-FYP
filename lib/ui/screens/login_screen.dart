@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Top Soft Purple Gradient Circle Background
+          // Purple Gradient Circle
           Positioned(
             top: -100,
             left: -50,
@@ -106,12 +106,7 @@ class LoginScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
-                    suffixText: 'FORGOT',
-                    suffixStyle: const TextStyle(
-                      color: Color(0xFF8B5CF6),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -129,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Forgot Password Click Action Handling via Suffix or separate link
+                // Forgot Password Click
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -170,7 +165,7 @@ class LoginScreen extends StatelessWidget {
                     ? const Center(child: CircularProgressIndicator())
                     : Column(
                   children: [
-                    // Login Button aligned nicely with modern theme
+                    // Login Button
                     Align(
                       alignment: Alignment.centerRight,
                       child: SizedBox(
@@ -215,7 +210,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Google Sign-In Button matching styling
+                    // Google Sign-In Button
                     SizedBox(
                       width: double.infinity,
                       height: 50,

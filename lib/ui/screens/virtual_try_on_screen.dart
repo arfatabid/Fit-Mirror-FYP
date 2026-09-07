@@ -31,7 +31,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Instruction Box
+            // Box
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -54,7 +54,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 1. User Photo Section
+            // 1. User Photo
             const Text(
               "1. Your Photo",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
@@ -77,7 +77,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: primaryPurple, foregroundColor: Colors.white),
                     onPressed: () {
-                      // Sheza ke sath mil kar Firebase Storage ka function yahan lagayenge
+
                     },
                     child: const Text("Upload Photo"),
                   ),
@@ -86,7 +86,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 2. Selected Outfit Section
+            // 2. Selected Outfit
             const Text(
               "2. Selected Outfit",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
@@ -140,7 +140,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   ? null
                   : () {
                 setState(() => _isGenerating = true);
-                // Fatima ki Diffusion API yahan connect hogi
+
                 Future.delayed(const Duration(seconds: 2), () {
                   setState(() => _isGenerating = false);
                   ScaffoldMessenger.of(context).showSnackBar(

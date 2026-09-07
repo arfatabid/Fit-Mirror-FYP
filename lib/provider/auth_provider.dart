@@ -45,7 +45,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Signup Function (Document ke mutabiq 8 characters check)
+  // Signup 8 characters
   Future<bool> signUp(String email, String password, BuildContext context) async {
     if (password.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
