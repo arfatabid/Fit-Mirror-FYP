@@ -13,7 +13,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
-  // Brand-specific items list (Mix items for that specific brand)
+  // Brand item list
   final Map<String, List<Map<String, dynamic>>> brandData = {
     "Ideas": [
       {"title": "Ideas Men Shalwar Kameez", "icon": Icons.accessibility_new},
@@ -49,10 +49,10 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Get items for the selected brand
+    // Get item form brand
     List<Map<String, dynamic>> items = brandData[widget.brandName] ?? [];
 
-    // Filter items based on search query
+    // Filter item
     final filteredItems = items.where((item) {
       final titleLower = item['title'].toLowerCase();
       final query = searchQuery.toLowerCase();
@@ -83,7 +83,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search bar for filtering brand items
+                // Search bar
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -123,7 +123,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Grid showing all mix items cleanly without separate category headers
+                // Grid of diff brands
                 Expanded(
                   child: filteredItems.isEmpty
                       ? const Center(
@@ -158,7 +158,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Product image/icon container
+                            // Product image
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -174,7 +174,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                                 ),
                               ),
                             ),
-                            // Item Name Only (No separate Men/Women badges)
+                            // Item Name
                             Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Text(

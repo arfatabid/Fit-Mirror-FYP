@@ -23,7 +23,7 @@ class SignupScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Top Soft Purple Gradient Circle Background
+          // Purple Gradient Circle
           Positioned(
             top: -120,
             left: -50,

@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'brand_catalog_screen.dart'; // Brand catalog screen ko import kiya hai
+import 'brand_catalog_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Hide back button / drawer icon
+        automaticallyImplyLeading: false,
         title: Text(
           "Fit Mirror",
           style: TextStyle(
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Main Banner Section
+                // Main Banner
                 Container(
                   width: double.infinity,
                   height: 160,
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Top Brands Section
+                // Top Brands
                 const Text(
                   "Top Brands",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Men Category Section
+                // Men Category
                 Center(
                   child: Text(
                     "Men Category",
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 28),
 
-                // Women Category Section
+                // Women Category
                 Center(
                   child: Text(
                     "Women Category",
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-                // Bottom spacing to prevent navigation bar overlap
+                // Bottom space
                 const SizedBox(height: 160),
               ],
             ),
@@ -246,11 +246,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Helper widget to display brand circles (Ab yeh clickable hain)
+  // Circle Brands
   Widget _buildBrandItemWithImage(String title, String imagePath) {
     return GestureDetector(
       onTap: () {
-        // Jab user kisi brand par click kare ga toh sirf usi brand ki items screen khule gi
+        // Action circle brand
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Helper widget to display category cards
+  // widget cards
   Widget _buildCategoryCard(String title, {IconData? icon, String? imagePath}) {
     return Container(
       height: 180,
@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Gradient Overlay for text readability
+            // Gradient
             if (imagePath != null)
               Positioned.fill(
                 child: Container(
@@ -360,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-            // Category Title Text
+            // Category Title
             Positioned(
               bottom: 12,
               left: 8,
