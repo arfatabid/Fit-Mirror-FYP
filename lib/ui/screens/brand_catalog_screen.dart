@@ -13,48 +13,143 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
-  // Brand item list
-  final Map<String, List<Map<String, dynamic>>> brandData = {
-    "Ideas": [
-      {"title": "Ideas Men Shalwar Kameez", "icon": Icons.accessibility_new},
-      {"title": "Ideas Formal Shirt", "icon": Icons.checkroom},
-      {"title": "Ideas Lawn Kurti", "icon": Icons.female},
-      {"title": "Ideas Festive Suit", "icon": Icons.person},
-      {"title": "Ideas Casual Kurta", "icon": Icons.man},
-      {"title": "Ideas Luxury Maxi", "icon": Icons.woman},
-    ],
-    "Breakout": [
-      {"title": "Breakout Casual Tee", "icon": Icons.man},
-      {"title": "Breakout Denim Jacket", "icon": Icons.checkroom},
-      {"title": "Breakout Western Top", "icon": Icons.woman},
-      {"title": "Breakout Party Dress", "icon": Icons.female},
-      {"title": "Breakout Cargo Pants", "icon": Icons.accessibility_new},
-    ],
-    "Outfitters": [
-      {"title": "Outfitters Hoodie", "icon": Icons.accessibility_new},
-      {"title": "Outfitters Cargo Pants", "icon": Icons.checkroom},
-      {"title": "Outfitters Summer Dress", "icon": Icons.female},
-      {"title": "Outfitters Casual Jumpsuit", "icon": Icons.person},
-      {"title": "Outfitters Graphic Tee", "icon": Icons.man},
-    ],
-    "Chase Value": [
-      {"title": "Chase Value Basic Kurta", "icon": Icons.accessibility_new},
-      {"title": "Chase Value Daily Wear Tee", "icon": Icons.checkroom},
-      {"title": "Chase Value Printed Suit", "icon": Icons.female},
-      {"title": "Chase Value Maxi", "icon": Icons.person},
-    ],
-  };
+  // items list
+  List<Map<String, String>> _getBrandItems() {
+    List<String> fileNames = [];
+
+    if (widget.brandName == "Ideas") {
+      fileNames = [
+        "Black & White Dress Women.png",
+        "Black Kurti Women.png",
+        "black_casualshirt_men.png",
+        "black_waiscoat_men.png",
+        "Blue kurti Women.png",
+        "Blue Long Suite Women.png",
+        "blue_waiscoat_men.png",
+        "cream_casualshirt_men.png",
+        "cream_kurta_men.png",
+        "dark_kurta_men.png",
+        "Green Suite Women.png",
+        "light_green_casualshirt_men.png",
+        "mehroon_shalwar_kameez_men.png",
+        "off_white_kurta_men.png",
+        "Pink Suite Women.png.jpg",
+        "Purple Suite Women.png.jpg",
+        "Purple White Suite Women.png",
+        "Red Dress Women.png",
+        "Red Long Suite Women.png",
+        "silver_pine_shalwar_kameez_men.png",
+        "skin_waiscoat_men.png",
+        "white_shalwar_kameez_men.png",
+        "Yellow Dress Women.png",
+        "Yellow Shirt Women.png",
+      ];
+    } else if (widget.brandName == "Breakout") {
+      fileNames = [
+        "black shirt men.png",
+        "black shirt women.png",
+        "black sweatshirt women.png",
+        "black tee men.png",
+        "brown sweat shirt men.png",
+        "brown tees women.png",
+        "green top women.png",
+        "grey polos men.png",
+        "grey shirt men.png",
+        "grey tees women.png",
+        "grey weatshirt men.png",
+        "mehroon top women.png",
+        "navy sweatshirt women.png",
+        "red sweatshirt men.png",
+        "skin shirt women.png",
+        "skin tees women.png",
+        "sky blue shirt men.png",
+        "whit brown lines tees men.png",
+        "white cream polos men.png",
+        "white polos men.png",
+        "white shirt women.png",
+        "white sweatshirt women.png",
+        "white tees men.png",
+        "yellow top women.png",
+      ];
+    } else if (widget.brandName == "Outfitters") {
+      fileNames = [
+        "black brown active wear women.png",
+        "black jump suit women.png",
+        "black shirt women.png",
+        "black t-shirt men.png",
+        "blue active wear men.png",
+        "blue black jump suit women.png",
+        "blue shirt women.png",
+        "brown red active wear women.png",
+        "dark blue brown active wear women.png",
+        "green active wear men.png",
+        "green shirt men.png",
+        "mehroon polo shirt men.png",
+        "pink t-shirt men.png",
+        "skin t-shirt women.png",
+        "white active wear tank top men.png",
+        "white flower shirt men.png",
+        "white jump suit women.png",
+        "white polo shirt men.png",
+        "white purple t-shirts women.png",
+        "white shirt men.png",
+        "white shirt women.png",
+        "white t-shirt men.png",
+        "white t-shirts women.png",
+        "yellow polo shirt men.png",
+      ];
+    } else if (widget.brandName == "Chase Value") {
+      fileNames = [
+        "black co-ords women.png",
+        "black red tracksuit women.png",
+        "blue kurti women.png",
+        "blue red t-shirt women.png",
+        "blue t-shirt women.png",
+        "brown t-shirt women.png",
+        "chase value men kameez shalwar brown.png",
+        "chase value men kameez shalwar grey.png",
+        "chase value men kameez shalwar white.png",
+        "chase value men kurta black.png",
+        "chase value men kurta brown.png",
+        "chase value men kurta grey.png",
+        "chase value men polo shirt black.png",
+        "chase value men polo shirt blue.png",
+        "chase value men polo shirt white.png",
+        "chase value men waist coat black.png",
+        "chase value men waist coat brown.png",
+        "green tracksuit women.png",
+        "grey co-ords women.png",
+        "grey kurti women.png",
+        "mehroon kurti women.png",
+        "orange co-ords women.png",
+        "purple t-shirt women.png",
+      ];
+    }
+
+    // Folder name
+    String folderName = widget.brandName; 
+    if (folderName == "Chase Value") {
+      folderName = "Chase Value"; // jesa folder mein hai
+    }
+
+    return fileNames.map((file) {
+      // File name extension
+      String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
+      return {
+        "title": title,
+        "image": "assets/Brands/$folderName/$file",
+      };
+    }).toList();
+  }
 
   String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
-    // Get item form brand
-    List<Map<String, dynamic>> items = brandData[widget.brandName] ?? [];
+    List<Map<String, String>> items = _getBrandItems();
 
-    // Filter item
     final filteredItems = items.where((item) {
-      final titleLower = item['title'].toLowerCase();
+      final titleLower = item['title']!.toLowerCase();
       final query = searchQuery.toLowerCase();
       return titleLower.contains(query);
     }).toList();
@@ -114,7 +209,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                 const SizedBox(height: 20),
 
                 Text(
-                  "All Items",
+                  "All Items (${filteredItems.length})",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -123,76 +218,84 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Grid of diff brands
+                // Grid View of all images
                 Expanded(
                   child: filteredItems.isEmpty
                       ? const Center(
-                    child: Text(
-                      "No items found.",
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                  )
+                          child: Text(
+                            "No items found.",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        )
                       : GridView.builder(
-                    itemCount: filteredItems.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item = filteredItems[index];
+                          itemCount: filteredItems.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.75,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = filteredItems[index];
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.95),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Product image
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: primaryPurple.withOpacity(0.08),
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    item['icon'],
-                                    size: 45,
-                                    color: primaryPurple,
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.95),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.04),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                            // Item Name
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                item['title'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: Colors.black87,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                      child: Image.asset(
+                                        item['image']!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            color: primaryPurple.withOpacity(0.08),
+                                            child: Center(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
+                                                  const SizedBox(height: 4),
+                                                  const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      item['title']!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11,
+                                        color: Colors.black87,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
