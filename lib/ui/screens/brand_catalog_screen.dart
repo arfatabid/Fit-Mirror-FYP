@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'virtual_try_on_screen.dart';
 
 class BrandCatalogScreen extends StatefulWidget {
   final String brandName;
@@ -106,17 +107,17 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         "blue red t-shirt women.png",
         "blue t-shirt women.png",
         "brown t-shirt women.png",
-        "chase value men kameez shalwar brown.png",
-        "chase value men kameez shalwar grey.png",
-        "chase value men kameez shalwar white.png",
-        "chase value men kurta black.png",
-        "chase value men kurta brown.png",
-        "chase value men kurta grey.png",
-        "chase value men polo shirt black.png",
-        "chase value men polo shirt blue.png",
-        "chase value men polo shirt white.png",
-        "chase value men waist coat black.png",
-        "chase value men waist coat brown.png",
+        "chasevalue men kameez shalwar brown.png",
+        "chasevalue men kameez shalwar grey.png",
+        "chasevalue men kameez shalwar white.png",
+        "chasevalue men kurta black.png",
+        "chasevalue men kurta brown.png",
+        "chasevalue men kurta grey.png",
+        "chasevalue men polo shirt black.png",
+        "chasevalue men polo shirt blue.png",
+        "chasevalue men polo shirt white.png",
+        "chasevalue men waist coat black.png",
+        "chasevalue men waist coat brown.png",
         "green tracksuit women.png",
         "grey co-ords women.png",
         "grey kurti women.png",
@@ -126,14 +127,13 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
       ];
     }
 
-    // Folder name
-    String folderName = widget.brandName; 
+    // Folder name mapping for assets path
+    String folderName = widget.brandName;
     if (folderName == "Chase Value") {
-      folderName = "Chase Value"; // jesa folder mein hai
+      folderName = "ChaseValue"; // Screenshot ke mutabiq baghair space wala folder name
     }
 
     return fileNames.map((file) {
-      // File name extension
       String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
       return {
         "title": title,
@@ -222,80 +222,93 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                 Expanded(
                   child: filteredItems.isEmpty
                       ? const Center(
-                          child: Text(
-                            "No items found.",
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                        )
+                    child: Text(
+                      "No items found.",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  )
                       : GridView.builder(
-                          itemCount: filteredItems.length,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.75,
-                          ),
-                          itemBuilder: (context, index) {
-                            final item = filteredItems[index];
+                    itemCount: filteredItems.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
 
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.95),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VirtualTryOnScreen(
+                                itemTitle: item['title']!,
+                                itemImagePath: item['image']!,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                      child: Image.asset(
-                                        item['image']!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            color: primaryPurple.withOpacity(0.08),
-                                            child: Center(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
-                                                  const SizedBox(height: 4),
-                                                  const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      item['title']!,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                        color: Colors.black87,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.95),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
                               ),
-                            );
-                          },
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                  child: Image.asset(
+                                    item['image']!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: primaryPurple.withOpacity(0.08),
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
+                                              const SizedBox(height: 4),
+                                              const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  item['title']!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

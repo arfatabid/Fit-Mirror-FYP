@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  image_picker: ^1.1.2
   cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
   firebase_auth: ^6.5.3
@@ -30,6 +31,6 @@ flutter:
     - assets/Brands/
     - assets/Brands/Ideas/
     - assets/Brands/Outfitters/
-    - assets/Brands/Chase Value/
+    - assets/Brands/ChaseValue/
     - assets/Brands/Breakout/
 
