@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'brand_catalog_screen.dart';
+import 'virtual_try_on_screen.dart'; // ✅ Import added
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -238,9 +239,19 @@ class _HomeScreenState extends State<HomeScreen> {
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 2) {
+            // Camera icon par click hone par VirtualTryOnScreen par navigate karein (WITHOUT const)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VirtualTryOnScreen(), // ✅ Non-const call
+              ),
+            );
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         },
       ),
     );
@@ -250,7 +261,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBrandItemWithImage(String title, String imagePath) {
     return GestureDetector(
       onTap: () {
-        // Action circle brand
         Navigator.push(
           context,
           MaterialPageRoute(

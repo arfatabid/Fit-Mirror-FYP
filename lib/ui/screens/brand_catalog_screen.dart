@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'virtual_try_on_screen.dart'; // Ensure karein ke yeh import theek ho
+import 'virtual_try_on_screen.dart';
 
 class BrandCatalogScreen extends StatefulWidget {
   final String brandName;
@@ -231,7 +231,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
 
                       return GestureDetector(
                         onTap: () {
-                          // Yahan se item ki image pass ho kar VirtualTryOnScreen khule gi
                           Navigator.push(
                             context,
                             MaterialPageRoute(
