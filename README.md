@@ -23,14 +23,14 @@ Fit Mirror is an AI-powered fashion assistant that lets you visualize clothes on
 
 We chose a modern, scalable architecture to ensure Fit Mirror is fast, reliable, and beautiful.
 
-- **Frontend:** Built with **Flutter (3.6.0+)** for a high-performance experience on both Android and iOS. We use the **BLoC pattern** for clean state management.
+- **Frontend:** Built with **Flutter (3.6.0+)** for a high-performance experience on Android. We use the **BLoC pattern** for clean state management.
 - **Backend:** **Firebase** handles the heavy lifting—Authentication for users, Firestore for real-time data, and Cloud Storage for high-res images.
 - **AI Integration:** **Google Gemini API** powers our stylist, while specialized Diffusion APIs handle the complex image synthesis for virtual try-ons.
 
 ### Key Tools & Libraries
 | Tool | Purpose |
 | :--- | :--- |
-| **Flutter SDK** | Cross-platform mobile foundation. |
+| **Flutter SDK** | Android app foundation. |
 | **flutter_bloc** | Predictable and organized state management. |
 | **Google Gemini** | The brain behind the personal styling assistant. |
 | **Firebase** | Real-time database, Storage, and Secure Auth. |
