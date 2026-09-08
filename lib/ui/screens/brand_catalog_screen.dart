@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'virtual_try_on_screen.dart'; // Ensure karein ke yeh import theek ho
 
 class BrandCatalogScreen extends StatefulWidget {
   final String brandName;
@@ -13,7 +14,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
-  // items list
   List<Map<String, String>> _getBrandItems() {
     List<String> fileNames = [];
 
@@ -126,14 +126,9 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
       ];
     }
 
-    // Folder name
-    String folderName = widget.brandName; 
-    if (folderName == "Chase Value") {
-      folderName = "Chase Value"; // jesa folder mein hai
-    }
+    String folderName = widget.brandName;
 
     return fileNames.map((file) {
-      // File name extension
       String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
       return {
         "title": title,
@@ -178,7 +173,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search bar
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -207,7 +201,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 Text(
                   "All Items (${filteredItems.length})",
                   style: TextStyle(
@@ -217,85 +210,96 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                // Grid View of all images
                 Expanded(
                   child: filteredItems.isEmpty
                       ? const Center(
-                          child: Text(
-                            "No items found.",
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                        )
+                    child: Text(
+                      "No items found.",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  )
                       : GridView.builder(
-                          itemCount: filteredItems.length,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.75,
-                          ),
-                          itemBuilder: (context, index) {
-                            final item = filteredItems[index];
+                    itemCount: filteredItems.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
 
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.95),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
+                      return GestureDetector(
+                        onTap: () {
+                          // Yahan se item ki image pass ho kar VirtualTryOnScreen khule gi
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VirtualTryOnScreen(
+                                garmentImageUrl: item['image'],
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                      child: Image.asset(
-                                        item['image']!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            color: primaryPurple.withOpacity(0.08),
-                                            child: Center(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
-                                                  const SizedBox(height: 4),
-                                                  const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      item['title']!,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                        color: Colors.black87,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.95),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
                               ),
-                            );
-                          },
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                  child: Image.asset(
+                                    item['image']!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: primaryPurple.withOpacity(0.08),
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
+                                              const SizedBox(height: 4),
+                                              const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  item['title']!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
