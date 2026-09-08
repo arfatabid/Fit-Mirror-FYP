@@ -28,6 +28,7 @@ We chose a modern, scalable architecture to ensure Fit Mirror is fast, reliable,
 - **AI Integration:** **Google Gemini API** powers our stylist, while specialized Diffusion APIs handle the complex image synthesis for virtual try-ons.
 
 ### Key Tools & Libraries
+
 | Tool | Purpose |
 | :--- | :--- |
 | **Flutter SDK** | Android app foundation. |
@@ -80,11 +81,11 @@ flutter run
 
 ## Database Structure (Firestore)
 
-- `Users`: Profiles, preferences, and metadata.
-- `Products`: Garment details (Brand, Category, Gender Tags).
-- `Wardrobe`: Your personal curated collections.
-- `TryOnLogs`: History of your AI-generated try-on looks.
-- `AssistantChats`: Real-time synced conversational memory.
+- **Users:** Profiles, preferences, and metadata.
+- **Products:** Garment details (Brand, Category, Gender Tags).
+- **Wardrobe:** Your personal curated collections.
+- **TryOnLogs:** History of your AI-generated try-on looks.
+- **AssistantChats:** Real-time synced conversational memory.
 
 ---
 
@@ -97,5 +98,3 @@ This project was developed as a Final Year Design Project (FYDP) for the BSIT (S
 - **Sheeza Shafique** (Roll No: 085318)
 
 **Project Supervisor:** Ms. Umaira Nazar Hussain
-
----
