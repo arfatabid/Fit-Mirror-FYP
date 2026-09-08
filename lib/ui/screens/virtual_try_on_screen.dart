@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'dart:typed_data';
 
 class VirtualTryOnScreen extends StatefulWidget {
   final String? garmentImageUrl; // Catalog se selected outfit asset path pass karne ke liye
@@ -16,21 +17,22 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
   final Color bgLavender = const Color(0xFFF7F5FC);
 
   bool _isGenerating = false;
-  File? _userPhoto;
-  File? _resultImage;
+  Uint8List? _userPhotoBytes;
+  Uint8List? _resultImageBytes;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickUserPhoto() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      final bytes = await image.readAsBytes();
       setState(() {
-        _userPhoto = File(image.path);
+        _userPhotoBytes = bytes;
       });
     }
   }
 
   Future<void> _generateVirtualTryOn() async {
-    if (_userPhoto == null) {
+    if (_userPhotoBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please upload your photo first!")),
       );
@@ -44,7 +46,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
 
       setState(() {
         _isGenerating = false;
-        _resultImage = _userPhoto;
+        _resultImageBytes = _userPhotoBytes;
       });
 
       if (!mounted) return;
@@ -111,13 +113,13 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.purple.shade100),
               ),
-              child: _userPhoto != null
+              child: _userPhotoBytes != null
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.file(_userPhoto!, fit: BoxFit.cover),
+                    Image.memory(_userPhotoBytes!, fit: BoxFit.cover),
                     Positioned(
                       bottom: 8,
                       right: 8,
@@ -171,7 +173,6 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    // Yahan Image.network ki jagah Image.asset use kiya hai kyunke images assets folder mein hain
                     child: widget.garmentImageUrl != null
                         ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
@@ -223,7 +224,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   : const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
 
-            if (_resultImage != null) ...[
+            if (_resultImageBytes != null) ...[
               const SizedBox(height: 30),
               const Text(
                 "3. Try-On Result",
@@ -239,7 +240,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.file(_resultImage!, fit: BoxFit.cover),
+                  child: Image.memory(_resultImageBytes!, fit: BoxFit.cover),
                 ),
               ),
             ],
