@@ -14,7 +14,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
-  // items list
   List<Map<String, String>> _getBrandItems() {
     List<String> fileNames = [];
 
@@ -127,11 +126,15 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
       ];
     }
 
+<<<<<<< HEAD
     // Folder name mapping for assets path
     String folderName = widget.brandName;
     if (folderName == "Chase Value") {
       folderName = "ChaseValue"; // Screenshot ke mutabiq baghair space wala folder name
     }
+=======
+    String folderName = widget.brandName;
+>>>>>>> e3c06d9418938a5d1bad884d60dea6e1ee03b485
 
     return fileNames.map((file) {
       String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
@@ -178,7 +181,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search bar
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -207,7 +209,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 Text(
                   "All Items (${filteredItems.length})",
                   style: TextStyle(
@@ -217,8 +218,6 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                // Grid View of all images
                 Expanded(
                   child: filteredItems.isEmpty
                       ? const Center(
@@ -244,8 +243,12 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => VirtualTryOnScreen(
+<<<<<<< HEAD
                                 itemTitle: item['title']!,
                                 itemImagePath: item['image']!,
+=======
+                                garmentImageUrl: item['image'],
+>>>>>>> e3c06d9418938a5d1bad884d60dea6e1ee03b485
                               ),
                             ),
                           );
