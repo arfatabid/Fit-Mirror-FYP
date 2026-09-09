@@ -126,15 +126,10 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
       ];
     }
 
-<<<<<<< HEAD
-    // Folder name mapping for assets path
     String folderName = widget.brandName;
     if (folderName == "Chase Value") {
-      folderName = "ChaseValue"; // Screenshot ke mutabiq baghair space wala folder name
+      folderName = "ChaseValue";
     }
-=======
-    String folderName = widget.brandName;
->>>>>>> e3c06d9418938a5d1bad884d60dea6e1ee03b485
 
     return fileNames.map((file) {
       String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
@@ -193,7 +188,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                     prefixIcon: Icon(Icons.search, color: primaryPurple),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
                       borderSide: BorderSide(color: primaryPurple.withOpacity(0.2)),
@@ -243,12 +238,8 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => VirtualTryOnScreen(
-<<<<<<< HEAD
                                 itemTitle: item['title']!,
                                 itemImagePath: item['image']!,
-=======
-                                garmentImageUrl: item['image'],
->>>>>>> e3c06d9418938a5d1bad884d60dea6e1ee03b485
                               ),
                             ),
                           );
