@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
 
 class VirtualTryOnScreen extends StatefulWidget {
-  final String? garmentImageUrl; // Catalog se selected outfit asset path pass karne ke liye
+  final String? garmentImageUrl; // slected path in catalogue
   const VirtualTryOnScreen({super.key, this.garmentImageUrl});
 
   @override
@@ -71,10 +71,16 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
           "Virtual Try-On",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white);
+        leading: Navigator.canPop(context)
+            ? IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        )
+            : null,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
