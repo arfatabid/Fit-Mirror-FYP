@@ -71,7 +71,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
           "Virtual Try-On",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: const IconThemeData(color: Colors.white);
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: Navigator.canPop(context)
             ? IconButton(
           icon: const Icon(Icons.arrow_back),
