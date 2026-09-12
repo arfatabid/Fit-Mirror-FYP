@@ -1,7 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'brand_catalog_screen.dart';
-import 'virtual_try_on_screen.dart'; // ✅ Import added
+import 'virtual_try_on_screen.dart';
+import 'chat_screen.dart'; // ✅ Import added
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -239,7 +240,15 @@ class _HomeScreenState extends State<HomeScreen> {
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         onTap: (index) {
-          if (index == 2) {
+          if (index == 1) {
+            // Support agent icon par click hone par ChatScreen par navigate karein
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ChatScreen(),
+              ),
+            );
+          } else if (index == 2) {
             // Camera icon par click hone par VirtualTryOnScreen par navigate karein (WITHOUT const)
             Navigator.push(
               context,

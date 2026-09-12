@@ -106,17 +106,17 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         "blue red t-shirt women.png",
         "blue t-shirt women.png",
         "brown t-shirt women.png",
-        "chase value men kameez shalwar brown.png",
-        "chase value men kameez shalwar grey.png",
-        "chase value men kameez shalwar white.png",
-        "chase value men kurta black.png",
-        "chase value men kurta brown.png",
-        "chase value men kurta grey.png",
-        "chase value men polo shirt black.png",
-        "chase value men polo shirt blue.png",
-        "chase value men polo shirt white.png",
-        "chase value men waist coat black.png",
-        "chase value men waist coat brown.png",
+        "chasevalue men kameez shalwar brown.png",
+        "chasevalue men kameez shalwar grey.png",
+        "chasevalue men kameez shalwar white.png",
+        "chasevalue men kurta black.png",
+        "chasevalue men kurta brown.png",
+        "chasevalue men kurta grey.png",
+        "chasevalue men polo shirt black.png",
+        "chasevalue men polo shirt blue.png",
+        "chasevalue men polo shirt white.png",
+        "chasevalue men waist coat black.png",
+        "chasevalue men waist coat brown.png",
         "green tracksuit women.png",
         "grey co-ords women.png",
         "grey kurti women.png",
@@ -127,6 +127,9 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
     }
 
     String folderName = widget.brandName;
+    if (folderName == "Chase Value") {
+      folderName = "ChaseValue";
+    }
 
     return fileNames.map((file) {
       String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
@@ -185,7 +188,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                     prefixIcon: Icon(Icons.search, color: primaryPurple),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
                       borderSide: BorderSide(color: primaryPurple.withOpacity(0.2)),
@@ -235,7 +238,8 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => VirtualTryOnScreen(
-                                garmentImageUrl: item['image'],
+                                itemTitle: item['title']!,
+                                itemImagePath: item['image']!,
                               ),
                             ),
                           );

@@ -24,6 +24,8 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
 
+      if (!context.mounted) return false;
+
       // Firebase errors
       String errorMessage = "An error occurred. Please try again.";
       if (e is FirebaseAuthException) {
@@ -64,6 +66,8 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
+
+      if (!context.mounted) return false;
 
       // Firebase  main errors
       String errorMessage = "An error occurred. Please try again.";
@@ -106,8 +110,11 @@ class AuthProvider extends ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
+
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Google Login Successful!")));
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Google Sign-In Error: ${e.toString()}")));
     } finally {
       _isLoading = false;

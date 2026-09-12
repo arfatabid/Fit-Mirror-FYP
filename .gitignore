@@ -36,3 +36,4 @@ doc/api/
 **/GeneratedPluginRegistrant.*
 **/local.properties
 .idea/
+.env
