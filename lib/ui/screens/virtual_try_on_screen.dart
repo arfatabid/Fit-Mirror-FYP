@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
+import 'dart:typed_data';
 
 class VirtualTryOnScreen extends StatefulWidget {
   final String? itemTitle;
@@ -24,7 +28,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
 
   File? _userPhoto;
   bool _isLoading = false;
-  String? _resultImageUrl;
+  Uint8List? _resultImageBytes;
 
   // 1. Pick user photo from gallery
   Future<void> _pickUserPhoto() async {
@@ -34,7 +38,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
     if (pickedFile != null) {
       setState(() {
         _userPhoto = File(pickedFile.path);
-        _resultImageUrl = null;
+        _resultImageBytes = null;
       });
     }
   }
@@ -67,33 +71,50 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
 
     try {
       // RapidAPI endpoint
-      var uri = Uri.parse("https://YOUR_RAPID_API_ENDPOINT_URL");
+      final endpoint = dotenv.env['RAPID_API_ENDPOINT_URL'] ?? '';
+      final apiKey = dotenv.env['RAPID_API_KEY'] ?? '';
+      final apiHost = dotenv.env['RAPID_API_HOST'] ?? '';
+
+      var uri = Uri.parse("https://$endpoint");
       var request = http.MultipartRequest('POST', uri);
 
       // RapidAPI Required Headers
-      request.headers['X-RapidAPI-Key'] = 'YOUR_RAPID_API_KEY';
-      request.headers['X-RapidAPI-Host'] = 'YOUR_RAPID_API_HOST';
+      request.headers['X-RapidAPI-Key'] = apiKey;
+      request.headers['X-RapidAPI-Host'] = apiHost;
 
-      // Attach User Photo
+      // Attach User Photo (Avatar Image)
       request.files.add(
-        await http.MultipartFile.fromPath('person_image', _userPhoto!.path),
+        await http.MultipartFile.fromPath(
+          'avatar_image', 
+          _userPhoto!.path,
+          contentType: MediaType('image', 'jpeg'),
+        ),
       );
 
-      // Garment Image
-      request.fields['garment_image'] = widget.itemImagePath!;
+      // Load Garment Image from assets and attach (Clothing Image)
+      ByteData garmentByteData = await rootBundle.load(widget.itemImagePath!);
+      List<int> garmentBytes = garmentByteData.buffer.asUint8List();
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'clothing_image',
+          garmentBytes,
+          filename: 'garment.png',
+          contentType: MediaType('image', 'png'),
+        ),
+      );
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+        // The API returns the raw image bytes directly
         if (!mounted) return;
         setState(() {
-          _resultImageUrl = data['output'] ?? data['image_url'];
+          _resultImageBytes = response.bodyBytes;
           _isLoading = false;
         });
       } else {
-        throw Exception("Server didn't respond. Try again.");
+        throw Exception("Server Error ${response.statusCode}: ${response.body}");
       }
     } catch (e) {
       if (!mounted) return;
@@ -208,7 +229,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                         ],
                       ),
                     )
-                        : _resultImageUrl != null
+                        : _resultImageBytes != null
                         ? Column(
                       children: [
                         Row(
@@ -223,7 +244,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                         Expanded(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.network(_resultImageUrl!, fit: BoxFit.cover, width: double.infinity),
+                            child: Image.memory(_resultImageBytes!, fit: BoxFit.cover, width: double.infinity),
                           ),
                         ),
                       ],

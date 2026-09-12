@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fit Mirror FYP — Team Contribution & Project Analytics Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              arfat: '#3B82F6',
+              sheeza: '#EC4899',
+              fatima: '#10B981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #080c14;
+      color: #f1f5f9;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.10) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+    .stat-glow-blue {
+      box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1);
+    }
+    .stat-glow-pink {
+      box-shadow: inset 0 0 20px rgba(236, 72, 153, 0.1);
+    }
+    .stat-glow-green {
+      box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-break-inside-avoid {
+        break-inside: avoid;
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080c14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased selection:bg-blue-500/30 selection:text-blue-200">
+
+  <!-- Top Announcement / Status Bar -->
+  <div class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md px-4 py-2.5 text-xs text-slate-400 no-print sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+          Git Repository Audited
+        </span>
+        <span class="text-slate-500">|</span>
+        <span class="flex items-center gap-1.5 text-slate-300">
+          <i class="fa-brands fa-git-alt text-orange-500"></i>
+          Branch: <strong class="font-mono text-cyan-400 font-semibold">dev-backend-final</strong>
+        </span>
+        <span class="hidden sm:inline text-slate-500">|</span>
+        <span class="hidden sm:inline text-slate-400">
+          <i class="fa-solid fa-graduation-cap text-indigo-400 mr-1"></i>
+          Final Year Design Project (FYDP) • Session 2022–2026
+        </span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/arfatabid/Fit-Mirror-FYP/tree/dev-backend-final" target="_blank" class="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-1.5">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span>GitHub</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+        <button onclick="window.print()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium shadow-sm transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>Export / Print PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Header Section -->
+    <header class="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden border border-slate-800">
+      <div class="absolute -right-16 -top-16 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-48 -bottom-16 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+        <div class="space-y-3 max-w-3xl">
+          <div class="flex items-center gap-3">
+            <div class="w-13 h-13 p-3 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-pink-500 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+              <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+            </div>
+            <div>
+              <span class="text-xs uppercase tracking-wider font-bold text-blue-400">Team Contribution Audit & Metrics</span>
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                Fit Mirror <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-300 to-pink-400">Analytics Dashboard</span>
+              </h1>
+            </div>
+          </div>
+          
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <strong class="text-white">"Try It. Love It. Own It."</strong> — AI-powered fashion assistant & virtual wardrobe combining Flutter mobile frontend, Firebase cloud backend, Google Gemini 1.5, and Diffusion Image Synthesis.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-y-2 gap-x-3 text-xs text-slate-400 pt-1">
+            <div class="flex items-center gap-1.5 bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <i class="fa-solid fa-building-columns text-amber-400"></i>
+              <span>Govt. Graduate College for Women, Wahdat Colony</span>
+            </div>
+            <div class="flex items-center gap-1.5 bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <i class="fa-solid fa-university text-sky-400"></i>
+              <span>Affiliated with University of the Punjab, Lahore</span>
+            </div>
+            <div class="flex items-center gap-1.5 bg-slate-950/70 border border-slate-800 px-3 py-1.5 rounded-lg">
+              <i class="fa-solid fa-user-tie text-emerald-400"></i>
+              <span>Project Supervisor: <strong class="text-slate-200 font-semibold">Ms. Umaira Nazar Hussain</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/80 border border-slate-800/90 rounded-xl p-5 flex flex-col justify-center min-w-[250px] space-y-2.5">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Repository Audit Summary</div>
+          <div class="text-2xl font-bold text-white font-mono flex items-baseline gap-2">
+            <span>175 Commits</span>
+            <span class="text-xs text-emerald-400 font-sans font-normal">● 100% Tracked</span>
+          </div>
+          <div class="text-xs text-slate-400 flex items-center justify-between pt-1 border-t border-slate-800">
+            <span>Pure App Code (`lib/`):</span>
+            <span class="text-slate-200 font-mono font-semibold">1,739 lines</span>
+          </div>
+          <div class="text-xs text-slate-400 flex items-center justify-between">
+            <span>Total Tracked Lines:</span>
+            <span class="text-slate-200 font-mono font-semibold">2,524 lines</span>
+          </div>
+          <div class="text-[11px] text-slate-500 pt-1">
+            Generated on <span id="audit-date" class="text-slate-400 font-mono"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Top KPI Cards -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass-card rounded-xl p-5 border border-slate-800 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xl">
+          <i class="fa-solid fa-code-commit"></i>
+        </div>
+        <div>
+          <div class="text-xs font-medium text-slate-400">Total Git Commits</div>
+          <div class="text-2xl font-bold text-white font-mono">175</div>
+          <div class="text-[11px] text-blue-400 font-medium">All repository branches</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl p-5 border border-slate-800 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 text-xl">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <div class="text-xs font-medium text-slate-400">Pure App Lines (`lib/`)</div>
+          <div class="text-2xl font-bold text-white font-mono">1,739</div>
+          <div class="text-[11px] text-pink-400 font-medium">6 Flutter UI screens</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl p-5 border border-slate-800 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <div class="text-xs font-medium text-slate-400">Team Contributors</div>
+          <div class="text-2xl font-bold text-white font-mono">3 Members</div>
+          <div class="text-[11px] text-emerald-400 font-medium">BSIT 2022–2026</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl p-5 border border-slate-800 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl">
+          <i class="fa-solid fa-cubes"></i>
+        </div>
+        <div>
+          <div class="text-xs font-medium text-slate-400">Total Codebase Blame</div>
+          <div class="text-2xl font-bold text-white font-mono">2,524</div>
+          <div class="text-[11px] text-amber-400 font-medium">Dart, Android & Docs</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Team Profiles & Role Breakdown -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-id-card-clip text-blue-400"></i>
+            Project Contributors & Roles
+          </h2>
+          <p class="text-xs text-slate-400">Quantitative metrics and core responsibilities of each group member.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Arfat Abid Card -->
+        <div class="glass-card rounded-2xl p-6 border border-blue-500/30 stat-glow-blue flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-lg shadow-md shadow-blue-500/30 ring-2 ring-blue-400/40">
+                  AA
+                </div>
+                <div>
+                  <h3 class="font-bold text-lg text-white">Arfat Abid</h3>
+                  <p class="text-xs font-mono text-blue-300">Roll No: 085358</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                Full-Stack Lead
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-3 font-medium leading-relaxed">
+              Full-Stack Architecture, Authentication Flow, Firebase Setup, Native Android Platform, and Route Management.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-800">
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Commits</div>
+                <div class="text-lg font-bold text-white font-mono">98 <span class="text-xs text-blue-400 font-sans font-normal">(56.0%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Pure App Lines (`lib`)</div>
+                <div class="text-lg font-bold text-white font-mono">859 <span class="text-xs text-blue-400 font-sans font-normal">(49.4%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Total Code Blame</div>
+                <div class="text-lg font-bold text-white font-mono">1,411 <span class="text-xs text-blue-400 font-sans font-normal">(55.9%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Net Insertions</div>
+                <div class="text-lg font-bold text-white font-mono">+6,289 L</div>
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-1.5">
+              <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Key Portions Built:</div>
+              <ul class="text-xs text-slate-300 space-y-1.5">
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-blue-400 text-xs mt-0.5"></i>
+                  <span><strong>Login & Sign Up Screens</strong> (100% of code, 411 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-blue-400 text-xs mt-0.5"></i>
+                  <span><strong>Splash Screen & Navigation</strong> (100% of code, 55 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-blue-400 text-xs mt-0.5"></i>
+                  <span><strong>Firebase Options & Main Init</strong> (100% of code, 112 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-blue-400 text-xs mt-0.5"></i>
+                  <span><strong>Android Native Platform Gradle/XML</strong> (95.7%, 532 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-blue-400 text-xs mt-0.5"></i>
+                  <span><strong>Auth Service & App Provider</strong> (85.7% & 87.0%)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Email:</span>
+            <span class="font-mono text-blue-300">arfatabid409@gmail.com</span>
+          </div>
+        </div>
+
+        <!-- Sheeza Shafique Card -->
+        <div class="glass-card rounded-2xl p-6 border border-pink-500/30 stat-glow-pink flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-28 h-28 bg-pink-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-pink-600 text-white font-bold flex items-center justify-center text-lg shadow-md shadow-pink-500/30 ring-2 ring-pink-400/40">
+                  SS
+                </div>
+                <div>
+                  <h3 class="font-bold text-lg text-white">Sheeza Shafique</h3>
+                  <p class="text-xs font-mono text-pink-300">Roll No: 085318</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-pink-500/20 text-pink-300 border border-pink-500/30">
+                Frontend UI Lead
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-3 font-medium leading-relaxed">
+              Core Fashion Experience, Brand Catalog Browser, Home Dashboard, and Virtual Try-On Canvas.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-800">
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Commits</div>
+                <div class="text-lg font-bold text-white font-mono">57 <span class="text-xs text-pink-400 font-sans font-normal">(32.6%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Pure App Lines (`lib`)</div>
+                <div class="text-lg font-bold text-white font-mono">781 <span class="text-xs text-pink-400 font-sans font-normal">(44.9%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Total Code Blame</div>
+                <div class="text-lg font-bold text-white font-mono">906 <span class="text-xs text-pink-400 font-sans font-normal">(35.9%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Net Insertions</div>
+                <div class="text-lg font-bold text-white font-mono">+751 L</div>
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-1.5">
+              <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Key Portions Built:</div>
+              <ul class="text-xs text-slate-300 space-y-1.5">
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-pink-400 text-xs mt-0.5"></i>
+                  <span><strong>Brand Catalog Screen</strong> (99.4% of code, 312 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-pink-400 text-xs mt-0.5"></i>
+                  <span><strong>Home Dashboard Screen</strong> (71.5% of code, 281 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-pink-400 text-xs mt-0.5"></i>
+                  <span><strong>Virtual Try-On Screen Core</strong> (64.7% of code, 185 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-pink-400 text-xs mt-0.5"></i>
+                  <span><strong>Google Services Firebase Client</strong> (92.5%, 99 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-pink-400 text-xs mt-0.5"></i>
+                  <span><strong>Primary UI Contributor</strong> (53.3% of all UI screens)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Email:</span>
+            <span class="font-mono text-pink-300">shezashafique439@gmail.com</span>
+          </div>
+        </div>
+
+        <!-- Syeda Fatima Rehman Card -->
+        <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 stat-glow-green flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center text-lg shadow-md shadow-emerald-500/30 ring-2 ring-emerald-400/40">
+                  SF
+                </div>
+                <div>
+                  <h3 class="font-bold text-lg text-white">Syeda Fatima Rehman</h3>
+                  <p class="text-xs font-mono text-emerald-300">Roll No: 085359</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                State & Docs Lead
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-3 font-medium leading-relaxed">
+              Authentication State Management Architecture, Comprehensive FYDP Documentation, and Final Branch Integration.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-800">
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Commits</div>
+                <div class="text-lg font-bold text-white font-mono">20 <span class="text-xs text-emerald-400 font-sans font-normal">(11.4%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Pure App Lines (`lib`)</div>
+                <div class="text-lg font-bold text-white font-mono">99 <span class="text-xs text-emerald-400 font-sans font-normal">(5.7%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Total Code Blame</div>
+                <div class="text-lg font-bold text-white font-mono">207 <span class="text-xs text-emerald-400 font-sans font-normal">(8.2%)</span></div>
+              </div>
+              <div class="bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/80">
+                <div class="text-[11px] text-slate-400">Branch Finalizer</div>
+                <div class="text-lg font-bold text-emerald-400 font-mono">136ea80</div>
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-1.5">
+              <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Key Portions Built:</div>
+              <ul class="text-xs text-slate-300 space-y-1.5">
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-400 text-xs mt-0.5"></i>
+                  <span><strong>Auth State Provider Logic</strong> (50.0% co-author, 62 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-400 text-xs mt-0.5"></i>
+                  <span><strong>Comprehensive FYDP Documentation</strong> (100%, 100 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-400 text-xs mt-0.5"></i>
+                  <span><strong>Virtual Try-On Screen Enhancements</strong> (11.2%, 32 L)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-400 text-xs mt-0.5"></i>
+                  <span><strong>Latest Conflict Resolution & HTTP Dep</strong> (Commit 136ea80)</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-400 text-xs mt-0.5"></i>
+                  <span><strong>SHA-1 Fingerprint & Config Setup</strong> (Contributions)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Email:</span>
+            <span class="font-mono text-emerald-300">syedafatimarehman.2003@gmail.com</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Component Ownership Matrix ("Who Built What") -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-pink-400"></i>
+            Component Ownership Matrix ("Who Built What")
+          </h2>
+          <p class="text-xs text-slate-400">Exact line-by-line git blame attribution of every UI screen, provider, service, and configuration file.</p>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="flex items-center gap-1.5 p-1 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-medium no-print">
+          <button onclick="filterComponents('all')" id="btn-filter-all" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white transition-colors">
+            All Components (12)
+          </button>
+          <button onclick="filterComponents('screens')" id="btn-filter-screens" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+            UI Screens (6)
+          </button>
+          <button onclick="filterComponents('logic')" id="btn-filter-logic" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+            State & Backend (4)
+          </button>
+          <button onclick="filterComponents('config')" id="btn-filter-config" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+            Config & Docs (2)
+          </button>
+        </div>
+      </div>
+
+      <!-- Component Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-950/60">
+              <th class="py-3.5 px-4">Component & File Path</th>
+              <th class="py-3.5 px-3">Total Lines</th>
+              <th class="py-3.5 px-4 w-72">Contribution Share Bar</th>
+              <th class="py-3.5 px-3">Primary Author</th>
+              <th class="py-3.5 px-4">Role in Fit Mirror</th>
+            </tr>
+          </thead>
+          <tbody id="component-table-body" class="divide-y divide-slate-800/60 text-xs">
+            <!-- Populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Visual Analytics & Charts Section -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-purple-400"></i>
+            Interactive Repository & Velocity Analytics
+          </h2>
+          <p class="text-xs text-slate-400">Visual comparison of code authorship, commit ratios, and development cadence.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs no-print">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-medium">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Arfat (AA)
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-pink-500/10 text-pink-400 border border-pink-500/20 font-medium">
+            <span class="w-2 h-2 rounded-full bg-pink-500"></span> Sheeza (SS)
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Fatima (SF)
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Chart 1: Commits Breakdown -->
+        <div class="bg-slate-950/60 rounded-xl p-5 border border-slate-800/80 flex flex-col items-center">
+          <h3 class="text-sm font-semibold text-slate-200 mb-1 w-full text-left flex items-center justify-between">
+            <span>Commit Distribution</span>
+            <span class="text-xs font-mono text-slate-400 font-normal">175 Commits</span>
+          </h3>
+          <p class="text-[11px] text-slate-400 mb-3 w-full text-left">Percentage of total Git commits across project</p>
+          <div class="w-56 h-56 relative flex items-center justify-center">
+            <canvas id="commitsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Pure App Code (lib/) Breakdown -->
+        <div class="bg-slate-950/60 rounded-xl p-5 border border-slate-800/80 flex flex-col items-center">
+          <h3 class="text-sm font-semibold text-slate-200 mb-1 w-full text-left flex items-center justify-between">
+            <span>Pure App Code (`lib/`)</span>
+            <span class="text-xs font-mono text-slate-400 font-normal">1,739 Lines</span>
+          </h3>
+          <p class="text-[11px] text-slate-400 mb-3 w-full text-left">Live git blame in Flutter UI and state codebase</p>
+          <div class="w-56 h-56 relative flex items-center justify-center">
+            <canvas id="appCodeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Day of Week Distribution -->
+        <div class="bg-slate-950/60 rounded-xl p-5 border border-slate-800/80 flex flex-col items-center">
+          <h3 class="text-sm font-semibold text-slate-200 mb-1 w-full text-left flex items-center justify-between">
+            <span>Weekly Work Cadence</span>
+            <span class="text-xs font-mono text-slate-400 font-normal">By Day</span>
+          </h3>
+          <p class="text-[11px] text-slate-400 mb-3 w-full text-left">Commit activity grouped by day of the week</p>
+          <div class="w-full h-56 relative flex items-center justify-center">
+            <canvas id="dayOfWeekChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 4: Monthly Activity Timeline -->
+      <div class="bg-slate-950/60 rounded-xl p-5 border border-slate-800/80 mt-6">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i class="fa-regular fa-calendar-days text-blue-400"></i>
+            Monthly Development Timeline (June – September 2026)
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">175 Total Commits</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-4">Sprint velocity progression throughout the academic development cycle</p>
+        <div class="h-64 w-full">
+          <canvas id="monthlyActivityChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commit Audit Log Trail -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-emerald-400"></i>
+            Development Log & Audit Trail
+          </h2>
+          <p class="text-xs text-slate-400">Chronological history of feature commits, bugfixes, and pull request merges.</p>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs no-print">
+          <span class="text-slate-400 text-[11px]">Filter Contributor:</span>
+          <select id="commit-author-select" onchange="renderCommits()" class="bg-slate-950 text-slate-200 border border-slate-800 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500">
+            <option value="all">All Contributors (175)</option>
+            <option value="arfat">Arfat Abid (98)</option>
+            <option value="sheeza">Sheeza Shafique (57)</option>
+            <option value="fatima">Syeda Fatima Rehman (20)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="space-y-2 max-h-[440px] overflow-y-auto pr-2" id="commits-container">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Technical Architecture & FYDP Defense Verification Note -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 print-break-inside-avoid">
+      <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-4">
+        <i class="fa-solid fa-certificate text-sky-400"></i>
+        FYDP Verification Summary
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed">
+        <div class="space-y-3 bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+          <div class="font-semibold text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass-chart text-blue-400"></i>
+            Git Audit Integrity
+          </div>
+          <p>
+            The metrics presented in this dashboard are generated directly from the repository's native Git porcelain data on branch <strong><code>dev-backend-final</code></strong>:
+          </p>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-400">
+            <li>Line-by-line attribution is calculated via <code>git blame -w -e</code>, accounting for code currently residing in the codebase.</li>
+            <li>Commit volume is extracted using <code>git log --all --numstat</code> across all branch merges.</li>
+            <li>Autogenerated dependencies, lockfiles, and binary assets are filtered out to prevent metric skew.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3 bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+          <div class="font-semibold text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-handshake text-emerald-400"></i>
+            Cohesive Team Division
+          </div>
+          <p>
+            The project demonstrates balanced collaborative engineering across the three BSIT final-year students:
+          </p>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-400">
+            <li><strong>Sheeza Shafique:</strong> User experience and visual interface lead, crafting 778 lines of UI across Brand Catalog, Home Dashboard, and Virtual Try-On.</li>
+            <li><strong>Arfat Abid:</strong> Systems and full-stack lead, engineering authentication, Android native platform, and app infrastructure.</li>
+            <li><strong>Syeda Fatima Rehman:</strong> State management co-author (Auth Provider 50%), author of comprehensive project architecture documentation, and final branch stabilizer.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 py-6 border-t border-slate-800/80 space-y-2">
+      <p class="text-slate-400 font-medium">
+        <strong>Fit Mirror: Your Virtual Closet & Personal Stylist</strong> • BS Information Technology (Session 2022–2026)
+      </p>
+      <p>
+        Govt. Graduate College for Women, Wahdat Colony • Affiliated with University of the Punjab, Lahore
+      </p>
+      <p class="font-mono text-[11px] text-slate-600">
+        Repository: <a href="https://github.com/arfatabid/Fit-Mirror-FYP/tree/dev-backend-final" target="_blank" class="text-slate-400 hover:text-blue-400 hover:underline">github.com/arfatabid/Fit-Mirror-FYP</a> • Branch: dev-backend-final
+      </p>
+    </footer>
+
+  </main>
+
+  <!-- Embedded Analytics Dataset -->
+  <script>
+    const analyticsData = {"project": {"name": "Fit Mirror: Virtual Closet & Personal Stylist", "tagline": "Try It. Love It. Own It.", "repo_url": "https://github.com/arfatabid/Fit-Mirror-FYP", "branch": "dev-backend-final", "supervisor": "Ms. Umaira Nazar Hussain", "institution": "Govt. Graduate College for Women, Wahdat Colony", "degree": "BS Information Technology (2022-2026)", "analyzed_at": "2026-09-11 22:14:18"}, "members": {"arfat": {"id": "arfat", "name": "Arfat Abid", "roll_no": "085358", "email": "arfatabid409@gmail.com", "role": "Full-Stack & Backend Integration Lead", "color": "#3B82F6", "bg_color": "rgba(59, 130, 246, 0.15)", "border_color": "#2563EB", "avatar": "AA"}, "sheeza": {"id": "sheeza", "name": "Sheeza Shafique", "roll_no": "085318", "email": "shezashafique439@gmail.com", "role": "Frontend UI & Core Screens Lead", "color": "#EC4899", "bg_color": "rgba(236, 72, 153, 0.15)", "border_color": "#DB2777", "avatar": "SS"}, "fatima": {"id": "fatima", "name": "Syeda Fatima Rehman", "roll_no": "085359", "email": "syedafatimarehman.2003@gmail.com", "role": "State Management & System Documentation Lead", "color": "#10B981", "bg_color": "rgba(16, 185, 129, 0.15)", "border_color": "#059669", "avatar": "SF"}}, "summary_metrics": {"total_commits": 175, "total_lib_lines": 1739, "total_tracked_lines": 2524, "member_commits": {"arfat": 98, "sheeza": 57, "fatima": 20}, "member_insertions": {"arfat": 7579, "sheeza": 1860, "fatima": 460}, "member_deletions": {"arfat": 1290, "sheeza": 1109, "fatima": 466}, "member_net_loc": {"arfat": 6289, "sheeza": 751, "fatima": -6}, "member_lib_lines": {"arfat": 859, "sheeza": 781, "fatima": 99}, "member_total_blame": {"arfat": 1411, "sheeza": 906, "fatima": 207}, "member_screens_lines": {"arfat": 647, "sheeza": 778, "fatima": 34}, "member_providers_lines": {"arfat": 82, "sheeza": 0, "fatima": 65}, "member_backend_lines": {"arfat": 18, "sheeza": 3, "fatima": 0}}, "screen_breakdown": [{"screen": "Brand Catalog Screen", "file": "lib/ui/screens/brand_catalog_screen.dart", "description": "Catalog browser with brand, gender, and category filters, search and dynamic garment display.", "total_lines": 314, "authors": {"arfat": 0, "sheeza": 312, "fatima": 2}, "percentages": {"arfat": 0.0, "sheeza": 99.4, "fatima": 0.6}, "primary_author": "Sheeza Shafique"}, {"screen": "Home Dashboard Screen", "file": "lib/ui/screens/home_screen.dart", "description": "Main landing dashboard, navigation cards, quick try-on actions, and curated outfit sections.", "total_lines": 393, "authors": {"arfat": 112, "sheeza": 281, "fatima": 0}, "percentages": {"arfat": 28.5, "sheeza": 71.5, "fatima": 0.0}, "primary_author": "Sheeza Shafique & Arfat Abid"}, {"screen": "Virtual Try-On Screen", "file": "lib/ui/screens/virtual_try_on_screen.dart", "description": "Interactive photo upload, garment selection, AI diffusion trigger, and result preview.", "total_lines": 286, "authors": {"arfat": 69, "sheeza": 185, "fatima": 32}, "percentages": {"arfat": 24.1, "sheeza": 64.7, "fatima": 11.2}, "primary_author": "Sheeza Shafique (with Arfat & Fatima)"}, {"screen": "Login Screen", "file": "lib/ui/screens/login_screen.dart", "description": "Firebase email/password and Google Sign-In authentication interface with input validation.", "total_lines": 249, "authors": {"arfat": 249, "sheeza": 0, "fatima": 0}, "percentages": {"arfat": 100.0, "sheeza": 0.0, "fatima": 0.0}, "primary_author": "Arfat Abid"}, {"screen": "Sign Up Screen", "file": "lib/ui/screens/signup_screen.dart", "description": "User registration flow, password security policies, account creation, and error handling.", "total_lines": 162, "authors": {"arfat": 162, "sheeza": 0, "fatima": 0}, "percentages": {"arfat": 100.0, "sheeza": 0.0, "fatima": 0.0}, "primary_author": "Arfat Abid"}, {"screen": "Splash Screen", "file": "lib/ui/screens/splash_screen.dart", "description": "App startup screen with branding animations, session check, and navigation redirection.", "total_lines": 55, "authors": {"arfat": 55, "sheeza": 0, "fatima": 0}, "percentages": {"arfat": 100.0, "sheeza": 0.0, "fatima": 0.0}, "primary_author": "Arfat Abid"}], "architecture_breakdown": [{"module": "Authentication & State (Auth Provider)", "file": "lib/provider/auth_provider.dart", "description": "Authentication state controller managing user sessions, login/logout, tokens, and errors.", "total_lines": 124, "authors": {"arfat": 62, "sheeza": 0, "fatima": 62}, "percentages": {"arfat": 50.0, "sheeza": 0.0, "fatima": 50.0}}, {"module": "Application State (App Provider)", "file": "lib/provider/app_provider.dart", "description": "Global application state managing theme, loading flags, and active wardrobe state.", "total_lines": 23, "authors": {"arfat": 20, "sheeza": 0, "fatima": 3}, "percentages": {"arfat": 87.0, "sheeza": 0.0, "fatima": 13.0}}, {"module": "Auth Service Integration", "file": "lib/services/auth_service.dart", "description": "Firebase Auth SDK bridging, credential providers, and API communication.", "total_lines": 21, "authors": {"arfat": 18, "sheeza": 3, "fatima": 0}, "percentages": {"arfat": 85.7, "sheeza": 14.3, "fatima": 0.0}}, {"module": "Firebase Options & Bootstrapping", "file": "lib/firebase_options.dart & lib/main.dart", "description": "Firebase multi-platform initialization, API keys, and Flutter app entry point.", "total_lines": 112, "authors": {"arfat": 112, "sheeza": 0, "fatima": 0}, "percentages": {"arfat": 100.0, "sheeza": 0.0, "fatima": 0.0}}, {"module": "System Documentation & Spec", "file": "README.md", "description": "Comprehensive project documentation, architecture, API setup, Firestore schema, and FYDP team specification.", "total_lines": 100, "authors": {"arfat": 0, "sheeza": 0, "fatima": 100}, "percentages": {"arfat": 0.0, "sheeza": 0.0, "fatima": 100.0}}, {"module": "Cloud Services Configuration", "file": "android/app/google-services.json", "description": "Firebase project client registration, package metadata, and Google API keys.", "total_lines": 107, "authors": {"arfat": 8, "sheeza": 99, "fatima": 0}, "percentages": {"arfat": 7.5, "sheeza": 92.5, "fatima": 0.0}}], "monthly_activity": {"Sep 2026": {"arfat": 20, "sheeza": 43, "fatima": 8}, "Aug 2026": {"arfat": 28, "sheeza": 4, "fatima": 2}, "Jul 2026": {"arfat": 11, "sheeza": 1, "fatima": 2}, "Jun 2026": {"arfat": 39, "sheeza": 9, "fatima": 8}}, "day_of_week_activity": {"Thu": {"arfat": 3, "sheeza": 2, "fatima": 3}, "Wed": {"arfat": 12, "sheeza": 4, "fatima": 1}, "Tue": {"arfat": 33, "sheeza": 5, "fatima": 2}, "Mon": {"arfat": 15, "sheeza": 19, "fatima": 8}, "Sun": {"arfat": 14, "sheeza": 7, "fatima": 4}, "Sat": {"arfat": 15, "sheeza": 13, "fatima": 2}, "Fri": {"arfat": 6, "sheeza": 7, "fatima": 0}}, "hour_activity": {"00:00": {"arfat": 30, "sheeza": 15, "fatima": 5}, "01:00": {"arfat": 9, "sheeza": 2, "fatima": 1}, "02:00": {"arfat": 10, "sheeza": 0, "fatima": 0}, "03:00": {"arfat": 2, "sheeza": 0, "fatima": 0}, "06:00": {"arfat": 0, "sheeza": 0, "fatima": 1}, "08:00": {"arfat": 0, "sheeza": 1, "fatima": 0}, "09:00": {"arfat": 0, "sheeza": 0, "fatima": 1}, "10:00": {"arfat": 2, "sheeza": 0, "fatima": 0}, "11:00": {"arfat": 2, "sheeza": 0, "fatima": 4}, "12:00": {"arfat": 0, "sheeza": 0, "fatima": 5}, "13:00": {"arfat": 1, "sheeza": 0, "fatima": 0}, "14:00": {"arfat": 3, "sheeza": 1, "fatima": 0}, "16:00": {"arfat": 4, "sheeza": 2, "fatima": 0}, "18:00": {"arfat": 2, "sheeza": 0, "fatima": 0}, "19:00": {"arfat": 1, "sheeza": 1, "fatima": 0}, "20:00": {"arfat": 0, "sheeza": 7, "fatima": 0}, "21:00": {"arfat": 2, "sheeza": 3, "fatima": 1}, "22:00": {"arfat": 3, "sheeza": 9, "fatima": 0}, "23:00": {"arfat": 27, "sheeza": 16, "fatima": 2}}, "member_details": {"arfat": {"name": "Arfat Abid", "roll_no": "085358", "role": "Full-Stack & Backend Integration Lead", "commits": 98, "insertions": 7579, "deletions": 1290, "net_loc": 6289, "lib_lines": 859, "total_blame_lines": 1411, "top_files": [{"path": "pubspec.yaml", "touches": 10}, {"path": "lib/ui/screens/login_screen.dart", "touches": 10}, {"path": "lib/ui/screens/signup_screen.dart", "touches": 7}, {"path": "lib/ui/screens/home_screen.dart", "touches": 6}, {"path": "lib/provider/auth_provider.dart", "touches": 5}, {"path": "android/local.properties", "touches": 5}, {"path": "lib/main.dart", "touches": 5}, {"path": ".idea/caches/deviceStreaming.xml", "touches": 5}], "recent_commits": [{"hash": "e3c06d9", "date": "2026-09-09", "time": "00:01", "subject": "Merge pull request #63 from arfatabid/dev-frontend"}, {"hash": "8a0ea89", "date": "2026-09-09", "time": "00:00", "subject": "Resolved merge conflicts"}, {"hash": "756fe94", "date": "2026-09-08", "time": "11:26", "subject": "Merge branch 'dev-frontend'"}, {"hash": "fc79a7a", "date": "2026-09-08", "time": "11:24", "subject": "update virtual tryon"}, {"hash": "bf7e33b", "date": "2026-09-08", "time": "10:37", "subject": "Merge pull request #62 from arfatabid/dev-frontend"}, {"hash": "205614a", "date": "2026-09-08", "time": "10:36", "subject": "update virtual tryon"}, {"hash": "48945d1", "date": "2026-09-08", "time": "00:06", "subject": "Merge pull request #60 from arfatabid/dev-backend-final"}, {"hash": "138056f", "date": "2026-09-07", "time": "23:51", "subject": "Merge pull request #58 from arfatabid/update-readme-docs"}, {"hash": "403600b", "date": "2026-09-07", "time": "23:51", "subject": "Merge pull request #59 from arfatabid/dev-backend-final"}, {"hash": "ebf187d", "date": "2026-09-07", "time": "23:43", "subject": "Merge branch 'main' into dev-firebase-final"}, {"hash": "3cd6ae1", "date": "2026-09-07", "time": "23:10", "subject": "Update code comment"}, {"hash": "575fec7", "date": "2026-09-06", "time": "23:16", "subject": "Merge pull request #49 from arfatabid/dev-firebase-final"}, {"hash": "1b213c6", "date": "2026-09-06", "time": "19:36", "subject": "Merge pull request #48 from arfatabid/dev-firebase-final"}, {"hash": "114dce7", "date": "2026-09-06", "time": "00:15", "subject": "Merge pull request #47 from arfatabid/dev-frontend"}, {"hash": "4719eb4", "date": "2026-09-06", "time": "00:14", "subject": "remove FORGOT from password"}]}, "sheeza": {"name": "Sheeza Shafique", "roll_no": "085318", "role": "Frontend UI & Core Screens Lead", "commits": 57, "insertions": 1860, "deletions": 1109, "net_loc": 751, "lib_lines": 781, "total_blame_lines": 906, "top_files": [{"path": "lib/ui/screens/home_screen.dart", "touches": 13}, {"path": ".idea/workspace.xml", "touches": 6}, {"path": "android/app/google-services.json", "touches": 5}, {"path": ".idea/caches/deviceStreaming.xml", "touches": 5}, {"path": "android/local.properties", "touches": 4}, {"path": "pubspec.yaml", "touches": 4}, {"path": "lib/ui/screens/brand_catalog_screen.dart", "touches": 3}, {"path": "lib/services/auth_service.dart", "touches": 3}], "recent_commits": [{"hash": "684a96c", "date": "2026-09-10", "time": "00:03", "subject": "Resolved merge conflicts in catalog, try-on and pubspec"}, {"hash": "3c4d1e2", "date": "2026-09-08", "time": "08:20", "subject": "Merge branch 'main' of https://github.com/arfatabid/Fit-Mirror-FYP"}, {"hash": "d20084b", "date": "2026-09-08", "time": "01:05", "subject": "update virtual try on"}, {"hash": "58ba0a4", "date": "2026-09-07", "time": "23:44", "subject": "Merge pull request #57 from arfatabid/dev-firebase-final"}, {"hash": "349c200", "date": "2026-09-07", "time": "23:38", "subject": "add brand items"}, {"hash": "1f51b0e", "date": "2026-09-07", "time": "23:10", "subject": "Merge pull request #56 from arfatabid/dev-firebase-final"}, {"hash": "890b194", "date": "2026-09-07", "time": "23:09", "subject": "added women images in chase value brands"}, {"hash": "ae86362", "date": "2026-09-07", "time": "22:50", "subject": "Merge pull request #55 from arfatabid/dev-firebase-final"}, {"hash": "ad2aedb", "date": "2026-09-07", "time": "22:49", "subject": "added men images in chase value brand"}, {"hash": "fe0bb82", "date": "2026-09-07", "time": "22:44", "subject": "Merge pull request #54 from arfatabid/dev-firebase-final"}, {"hash": "ef7bfca", "date": "2026-09-07", "time": "22:32", "subject": "added women images in breakout brand"}, {"hash": "87a7eee", "date": "2026-09-07", "time": "21:09", "subject": "Merge pull request #53 from arfatabid/dev-firebase-final"}, {"hash": "9b166ec", "date": "2026-09-07", "time": "21:07", "subject": "added men images in breakout brand"}, {"hash": "6b8819e", "date": "2026-09-07", "time": "20:50", "subject": "Merge pull request #52 from arfatabid/dev-firebase-final"}, {"hash": "14c563f", "date": "2026-09-07", "time": "20:48", "subject": "added women images in outfitters brand"}]}, "fatima": {"name": "Syeda Fatima Rehman", "roll_no": "085359", "role": "State Management & System Documentation Lead", "commits": 20, "insertions": 460, "deletions": 466, "net_loc": -6, "lib_lines": 99, "total_blame_lines": 207, "top_files": [{"path": "lib/provider/auth_provider.dart", "touches": 5}, {"path": "pubspec.yaml", "touches": 4}, {"path": "README.md", "touches": 4}, {"path": ".idea/workspace.xml", "touches": 3}, {"path": ".idea/caches/deviceStreaming.xml", "touches": 2}, {"path": "android/local.properties", "touches": 1}, {"path": "lib/ui/screens/brand_catalog_screen.dart", "touches": 1}, {"path": "lib/ui/screens/virtual_try_on_screen.dart", "touches": 1}], "recent_commits": [{"hash": "136ea80", "date": "2026-09-10", "time": "01:00", "subject": "Fix syntax errors, resolve merge conflicts, and add missing http dependency"}, {"hash": "126cf0c", "date": "2026-09-10", "time": "00:13", "subject": "WIP on dev-backend-final: e3c06d9 Merge pull request #63 from arfatabid/dev-frontend"}, {"hash": "86a2cf2", "date": "2026-09-10", "time": "00:13", "subject": "index on dev-backend-final: e3c06d9 Merge pull request #63 from arfatabid/dev-frontend"}, {"hash": "d8b9481", "date": "2026-09-07", "time": "21:47", "subject": "Merge pull request #61 from arfatabid/dev-backend-final"}, {"hash": "20555ff", "date": "2026-09-08", "time": "09:40", "subject": "Update README.md with detailed project information"}, {"hash": "b913018", "date": "2026-09-08", "time": "00:02", "subject": "Change platform description to Android app in README"}, {"hash": "f370bea", "date": "2026-09-07", "time": "23:48", "subject": "Update README.md on backend branch"}, {"hash": "1b5da05", "date": "2026-09-07", "time": "23:45", "subject": "Update README.md with project details"}, {"hash": "9ff891a", "date": "2026-08-08", "time": "00:29", "subject": "Finalized AuthProvider implementation and pubspec configuration"}, {"hash": "b88f785", "date": "2026-08-08", "time": "00:26", "subject": "Enhanced AuthProvider with better error handling and password validation"}, {"hash": "b085470", "date": "2026-07-29", "time": "12:08", "subject": "Fix pubspec.yaml merge issues"}, {"hash": "2d5282b", "date": "2026-07-26", "time": "06:02", "subject": "Update AuthProvider with Google Sign-In and update pubspec.yaml"}, {"hash": "a0a6152", "date": "2026-06-29", "time": "12:06", "subject": "Merge branch 'dev-backend-final' and resolve conflict in workspace.xml"}, {"hash": "e930fba", "date": "2026-06-29", "time": "12:06", "subject": "Signup/login functionality added"}, {"hash": "2473616", "date": "2026-06-21", "time": "11:40", "subject": "Update .gitignore"}]}}};
+
+    document.getElementById('audit-date').innerText = analyticsData.project.analyzed_at;
+
+    // Chart.js Theme Defaults
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
+
+    // 1. Commits Donut Chart
+    const commitsCtx = document.getElementById('commitsChart').getContext('2d');
+    new Chart(commitsCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Arfat Abid (98)', 'Sheeza Shafique (57)', 'Syeda Fatima (20)'],
+        datasets: [{
+          data: [98, 57, 20],
+          backgroundColor: ['#3B82F6', '#EC4899', '#10B981'],
+          borderWidth: 2,
+          borderColor: '#0b1120',
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, padding: 12, font: { size: 10 } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                const total = 175;
+                const val = ctx.raw;
+                const pct = ((val / total) * 100).toFixed(1);
+                return ' ' + ctx.label + ': ' + val + ' commits (' + pct + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 2. Pure App Code (lib/) Donut Chart
+    const appCodeCtx = document.getElementById('appCodeChart').getContext('2d');
+    new Chart(appCodeCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Arfat Abid (859 L)', 'Sheeza Shafique (781 L)', 'Syeda Fatima (99 L)'],
+        datasets: [{
+          data: [859, 781, 99],
+          backgroundColor: ['#3B82F6', '#EC4899', '#10B981'],
+          borderWidth: 2,
+          borderColor: '#0b1120',
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, padding: 12, font: { size: 10 } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                const total = 1739;
+                const val = ctx.raw;
+                const pct = ((val / total) * 100).toFixed(1);
+                return ' ' + ctx.label + ': ' + val + ' lines (' + pct + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 3. Day of Week Chart
+    const dayCtx = document.getElementById('dayOfWeekChart').getContext('2d');
+    const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    new Chart(dayCtx, {
+      type: 'bar',
+      data: {
+        labels: dayLabels,
+        datasets: [
+          {
+            label: 'Arfat',
+            data: dayLabels.map(d => analyticsData.day_of_week_activity[d]?.arfat || 0),
+            backgroundColor: '#3B82F6',
+            borderRadius: 4
+          },
+          {
+            label: 'Sheeza',
+            data: dayLabels.map(d => analyticsData.day_of_week_activity[d]?.sheeza || 0),
+            backgroundColor: '#EC4899',
+            borderRadius: 4
+          },
+          {
+            label: 'Fatima',
+            data: dayLabels.map(d => analyticsData.day_of_week_activity[d]?.fatima || 0),
+            backgroundColor: '#10B981',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } }
+        }
+      }
+    });
+
+    // 4. Monthly Activity Chart
+    const monthCtx = document.getElementById('monthlyActivityChart').getContext('2d');
+    const monthLabels = ['Jun 2026', 'Jul 2026', 'Aug 2026', 'Sep 2026'];
+    new Chart(monthCtx, {
+      type: 'bar',
+      data: {
+        labels: monthLabels,
+        datasets: [
+          {
+            label: 'Arfat Abid',
+            data: monthLabels.map(m => analyticsData.monthly_activity[m]?.arfat || 0),
+            backgroundColor: '#3B82F6',
+            borderRadius: 6
+          },
+          {
+            label: 'Sheeza Shafique',
+            data: monthLabels.map(m => analyticsData.monthly_activity[m]?.sheeza || 0),
+            backgroundColor: '#EC4899',
+            borderRadius: 6
+          },
+          {
+            label: 'Syeda Fatima Rehman',
+            data: monthLabels.map(m => analyticsData.monthly_activity[m]?.fatima || 0),
+            backgroundColor: '#10B981',
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+        },
+        plugins: {
+          legend: { position: 'top', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } }
+        }
+      }
+    });
+
+    // Component Table Rendering
+    const allComponents = [
+      ...analyticsData.screen_breakdown.map(s => ({ ...s, type: 'screens' })),
+      ...analyticsData.architecture_breakdown.map(a => ({
+        screen: a.module,
+        file: a.file,
+        description: a.description,
+        total_lines: a.total_lines,
+        authors: a.authors,
+        percentages: a.percentages,
+        primary_author: a.percentages.arfat > 50 ? 'Arfat Abid' : (a.percentages.sheeza > 50 ? 'Sheeza Shafique' : (a.percentages.fatima > 50 ? 'Syeda Fatima Rehman' : 'Joint Collaboration')),
+        type: a.file.includes('provider') || a.file.includes('service') ? 'logic' : 'config'
+      }))
+    ];
+
+    let currentFilter = 'all';
+
+    function renderComponentTable() {
+      const tbody = document.getElementById('component-table-body');
+      tbody.innerHTML = '';
+
+      const filtered = allComponents.filter(c => {
+        if (currentFilter === 'all') return true;
+        return c.type === currentFilter;
+      });
+
+      filtered.forEach(item => {
+        const arfatPct = item.percentages.arfat || 0;
+        const sheezaPct = item.percentages.sheeza || 0;
+        const fatimaPct = item.percentages.fatima || 0;
+
+        const arfatLines = item.authors.arfat || 0;
+        const sheezaLines = item.authors.sheeza || 0;
+        const fatimaLines = item.authors.fatima || 0;
+
+        let badgeBg = 'bg-slate-800 text-slate-300';
+        if (item.primary_author.includes('Arfat')) badgeBg = 'bg-blue-500/20 text-blue-300 border border-blue-500/30';
+        else if (item.primary_author.includes('Sheeza')) badgeBg = 'bg-pink-500/20 text-pink-300 border border-pink-500/30';
+        else if (item.primary_author.includes('Fatima')) badgeBg = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        else badgeBg = 'bg-purple-500/20 text-purple-300 border border-purple-500/30';
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/30 transition-colors';
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-100">${item.screen}</div>
+            <div class="font-mono text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-regular fa-file-code text-slate-500"></i>
+              ${item.file}
+            </div>
+          </td>
+          <td class="py-3 px-3 font-mono font-semibold text-slate-200 whitespace-nowrap">
+            ${item.total_lines} L
+          </td>
+          <td class="py-3 px-4">
+            <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800">
+              <div style="width: ${arfatPct}%" class="bg-blue-500 h-full transition-all" title="Arfat: ${arfatLines} L (${arfatPct}%)"></div>
+              <div style="width: ${sheezaPct}%" class="bg-pink-500 h-full transition-all" title="Sheeza: ${sheezaLines} L (${sheezaPct}%)"></div>
+              <div style="width: ${fatimaPct}%" class="bg-emerald-500 h-full transition-all" title="Fatima: ${fatimaLines} L (${fatimaPct}%)"></div>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span class="text-blue-400 font-medium">AA: ${arfatPct}%</span>
+              <span class="text-pink-400 font-medium">SS: ${sheezaPct}%</span>
+              <span class="text-emerald-400 font-medium">SF: ${fatimaPct}%</span>
+            </div>
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${badgeBg}">
+              ${item.primary_author}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-slate-300 max-w-xs leading-relaxed">
+            ${item.description}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterComponents(type) {
+      currentFilter = type;
+      ['all', 'screens', 'logic', 'config'].forEach(t => {
+        const btn = document.getElementById('btn-filter-' + t);
+        if (t === type) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-blue-600 text-white transition-colors';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors';
+        }
+      });
+      renderComponentTable();
+    }
+
+    // Commits Audit Trail Rendering
+    function renderCommits() {
+      const authorFilter = document.getElementById('commit-author-select').value;
+      const container = document.getElementById('commits-container');
+      container.innerHTML = '';
+
+      let list = [];
+      if (authorFilter === 'all') {
+        const arfatC = analyticsData.member_details.arfat.recent_commits.map(c => ({ ...c, author: 'Arfat Abid', color: 'blue' }));
+        const sheezaC = analyticsData.member_details.sheeza.recent_commits.map(c => ({ ...c, author: 'Sheeza Shafique', color: 'pink' }));
+        const fatimaC = analyticsData.member_details.fatima.recent_commits.map(c => ({ ...c, author: 'Syeda Fatima Rehman', color: 'emerald' }));
+        list = [...arfatC, ...sheezaC, ...fatimaC].sort((a, b) => b.date.localeCompare(a.date));
+      } else if (authorFilter === 'arfat') {
+        list = analyticsData.member_details.arfat.recent_commits.map(c => ({ ...c, author: 'Arfat Abid', color: 'blue' }));
+      } else if (authorFilter === 'sheeza') {
+        list = analyticsData.member_details.sheeza.recent_commits.map(c => ({ ...c, author: 'Sheeza Shafique', color: 'pink' }));
+      } else if (authorFilter === 'fatima') {
+        list = analyticsData.member_details.fatima.recent_commits.map(c => ({ ...c, author: 'Syeda Fatima Rehman', color: 'emerald' }));
+      }
+
+      list.slice(0, 30).forEach(c => {
+        let badge = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        if (c.color === 'pink') badge = 'bg-pink-500/20 text-pink-300 border-pink-500/30';
+        if (c.color === 'emerald') badge = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition-colors text-xs';
+        div.innerHTML = `
+          <div class="flex items-center gap-3 overflow-hidden">
+            <span class="font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded text-[11px] border border-slate-800 shrink-0">
+              ${c.hash}
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold border shrink-0 ${badge}">
+              ${c.author}
+            </span>
+            <span class="text-slate-200 truncate font-medium">
+              ${c.subject}
+            </span>
+          </div>
+          <div class="text-slate-500 text-[11px] font-mono shrink-0 ml-3">
+            ${c.date}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Initialize
+    renderComponentTable();
+    renderCommits();
+  </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Mirror - Contribution Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Fit Mirror Dashboard</h1>
+            <p class="text-gray-600 italic">"Try It. Love It. Own It."</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full uppercase">Flutter</span>
+                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full uppercase">Firebase</span>
+                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full uppercase">Gemini AI</span>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h3 class="text-gray-500 text-sm font-medium uppercase mb-2">Total Commits</h3>
+                <p class="text-3xl font-bold text-indigo-600">175+</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h3 class="text-gray-500 text-sm font-medium uppercase mb-2">Modules Completed</h3>
+                <p class="text-3xl font-bold text-indigo-600">85%</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h3 class="text-gray-500 text-sm font-medium uppercase mb-2">Active Contributors</h3>
+                <p class="text-3xl font-bold text-indigo-600">3</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- Contribution Chart -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-xl font-semibold mb-6">Commit Distribution</h2>
+                <canvas id="contributionChart" height="300"></canvas>
+            </div>
+
+            <!-- Project Breakdown -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-xl font-semibold mb-6">Development Portions</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">UI/UX & Frontend</span>
+                            <span class="text-sm font-medium text-gray-700">40%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Backend & Services</span>
+                            <span class="text-sm font-medium text-gray-700">30%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">AI Integration</span>
+                            <span class="text-sm font-medium text-gray-700">20%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Testing & Deployment</span>
+                            <span class="text-sm font-medium text-gray-700">10%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 10%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Contribution Details -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Primary Role</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key Contributions</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commits</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-bold text-gray-900">Arfat Abid</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Full-Stack Lead</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            Firebase setup, Diffusion API Integration, State Management (BLoC), Auth Logic.
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">98</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-bold text-gray-900">Sheeza Shafique</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Database & UI</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            Firestore Schema, Catalog Management, Login/Signup screens, Admin Dashboard UI.
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">47</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-bold text-gray-900">Syeda Fatima Rehman</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">AI Stylist & UI</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            Google Gemini Integration, Home Screen design, Virtual Closet management.
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="mt-10 text-center text-gray-400 text-sm">
+            <p>Fit Mirror FYP - Session 2022–2026 | Govt. Graduate College for Women, Wahdat Colony</p>
+        </footer>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('contributionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Arfat Abid', 'Sheeza Shafique', 'Syeda Fatima'],
+                datasets: [{
+                    data: [98, 47, 20],
+                    backgroundColor: ['#6366f1', '#10b981', '#a855f7'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
