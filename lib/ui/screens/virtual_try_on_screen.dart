@@ -9,14 +9,8 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:typed_data';
 
 class VirtualTryOnScreen extends StatefulWidget {
-  final String? itemTitle;
-  final String? itemImagePath;
-
-  const VirtualTryOnScreen({
-    super.key,
-    this.itemTitle,
-    this.itemImagePath,
-  });
+  final String? garmentImageUrl; // slected path in catalogue
+  const VirtualTryOnScreen({super.key, this.garmentImageUrl});
 
   @override
   State<VirtualTryOnScreen> createState() => _VirtualTryOnScreenState();
@@ -30,7 +24,15 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
   bool _isLoading = false;
   Uint8List? _resultImageBytes;
 
-  // 1. Pick user photo from gallery
+  // Locally selected garment manage karne ke liye taake user try-on screen se hi change kar sakay
+  String? _selectedGarmentUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGarmentUrl = widget.garmentImageUrl;
+  }
+
   Future<void> _pickUserPhoto() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -43,9 +45,331 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
     }
   }
 
-  // 2. RapidAPI Try-On Diffusion API Integration
-  Future<void> _startRapidApiTryOn() async {
-    if (_userPhoto == null) {
+  // Brands aur unke garments ki list helper function
+  List<Map<String, String>> _getBrandItems(String brandName) {
+    List<String> fileNames = [];
+
+    if (brandName == "Ideas") {
+      fileNames = [
+        "Black & White Dress Women.png",
+        "Black Kurti Women.png",
+        "black_casualshirt_men.png",
+        "black_waiscoat_men.png",
+        "Blue kurti Women.png",
+        "Blue Long Suite Women.png",
+        "blue_waiscoat_men.png",
+        "cream_casualshirt_men.png",
+        "cream_kurta_men.png",
+        "dark_kurta_men.png",
+        "Green Suite Women.png",
+        "light_green_casualshirt_men.png",
+        "mehroon_shalwar_kameez_men.png",
+        "off_white_kurta_men.png",
+        "Pink Suite Women.png.jpg",
+        "Purple Suite Women.png.jpg",
+        "Purple White Suite Women.png",
+        "Red Dress Women.png",
+        "Red Long Suite Women.png",
+        "silver_pine_shalwar_kameez_men.png",
+        "skin_waiscoat_men.png",
+        "white_shalwar_kameez_men.png",
+        "Yellow Dress Women.png",
+        "Yellow Shirt Women.png",
+      ];
+    } else if (brandName == "Breakout") {
+      fileNames = [
+        "black shirt men.png",
+        "black shirt women.png",
+        "black sweatshirt women.png",
+        "black tee men.png",
+        "brown sweat shirt men.png",
+        "brown tees women.png",
+        "green top women.png",
+        "grey polos men.png",
+        "grey shirt men.png",
+        "grey tees women.png",
+        "grey weatshirt men.png",
+        "mehroon top women.png",
+        "navy sweatshirt women.png",
+        "red sweatshirt men.png",
+        "skin shirt women.png",
+        "skin tees women.png",
+        "sky blue shirt men.png",
+        "whit brown lines tees men.png",
+        "white cream polos men.png",
+        "white polos men.png",
+        "white shirt women.png",
+        "white sweatshirt women.png",
+        "white tees men.png",
+        "yellow top women.png",
+      ];
+    } else if (brandName == "Outfitters") {
+      fileNames = [
+        "black brown active wear women.png",
+        "black jump suit women.png",
+        "black shirt women.png",
+        "black t-shirt men.png",
+        "blue active wear men.png",
+        "blue black jump suit women.png",
+        "blue shirt women.png",
+        "brown red active wear women.png",
+        "dark blue brown active wear women.png",
+        "green active wear men.png",
+        "green shirt men.png",
+        "mehroon polo shirt men.png",
+        "pink t-shirt men.png",
+        "skin t-shirt women.png",
+        "white active wear tank top men.png",
+        "white flower shirt men.png",
+        "white jump suit women.png",
+        "white polo shirt men.png",
+        "white purple t-shirts women.png",
+        "white shirt men.png",
+        "white shirt women.png",
+        "white t-shirt men.png",
+        "white t-shirts women.png",
+        "yellow polo shirt men.png",
+      ];
+    } else if (brandName == "Chase Value") {
+      fileNames = [
+        "black co-ords women.png",
+        "black red tracksuit women.png",
+        "blue kurti women.png",
+        "blue red t-shirt women.png",
+        "blue t-shirt women.png",
+        "brown t-shirt women.png",
+        "chase value men kameez shalwar brown.png",
+        "chase value men kameez shalwar grey.png",
+        "chase value men kameez shalwar white.png",
+        "chase value men kurta black.png",
+        "chase value men kurta brown.png",
+        "chase value men kurta grey.png",
+        "chase value men polo shirt black.png",
+        "chase value men polo shirt blue.png",
+        "chase value men polo shirt white.png",
+        "chase value men waist coat black.png",
+        "chase value men waist coat brown.png",
+        "green tracksuit women.png",
+        "grey co-ords women.png",
+        "grey kurti women.png",
+        "mehroon kurti women.png",
+        "orange co-ords women.png",
+        "purple t-shirt women.png",
+      ];
+    }
+
+    return fileNames.map((file) {
+      String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
+      return {
+        "title": title,
+        "image": "assets/Brands/$brandName/$file",
+      };
+    }).toList();
+  }
+
+  // 1. Brands select karne ke liye Bottom Sheet (Sirf clear logos without text overlap)
+  void _showBrandSelectionSheet(BuildContext context) {
+    final List<Map<String, String>> brands = [
+      {"name": "Ideas", "logo": "assets/images/ideas.png"},
+      {"name": "Breakout", "logo": "assets/images/breakout.png"},
+      {"name": "Outfitters", "logo": "assets/images/outfitters.png"},
+      {"name": "Chase Value", "logo": "assets/images/chasevalue.png"},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height * 0.55,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "Select a Brand",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: primaryPurple),
+              ),
+              const SizedBox(height: 15),
+              Expanded(
+                child: GridView.builder(
+                  itemCount: brands.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 1.4, // Rectangular layout ratio
+                  ),
+                  itemBuilder: (context, index) {
+                    final brand = brands[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.pop(context); // Close brand sheet
+                        _showGarmentsSelectionSheet(context, brand['name']!); // Open garments sheet
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: bgLavender,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.purple.shade100, width: 1.2),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            brand['logo']!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Text(
+                                brand['name']!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryPurple,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 2. Selected Brand ke Garments select karne ke liye Bottom Sheet
+  void _showGarmentsSelectionSheet(BuildContext context, String brandName) {
+    final garments = _getBrandItems(brandName);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: primaryPurple),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showBrandSelectionSheet(context); // Go back to brands
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    "$brandName Collection",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: primaryPurple),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Expanded(
+                child: GridView.builder(
+                  itemCount: garments.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.75,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = garments[index];
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          _selectedGarmentUrl = item['image'];
+                        });
+                        Navigator.pop(context); // Close sheet
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: bgLavender,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.purple.shade100),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                child: Image.asset(
+                                  item['image']!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Center(child: Icon(Icons.broken_image));
+                                  },
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                item['title']!,
+                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _generateVirtualTryOn() async {
+    if (_userPhotoBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please upload your photo first! (Business Rule)"),
@@ -141,28 +465,34 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
           "Virtual Try-On",
           style: TextStyle(color: Color(0xFF5E35B1), fontWeight: FontWeight.bold),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF5E35B1)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: Navigator.canPop(context)
+            ? IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        )
+            : null,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/background.jpeg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Selected Outfit Card
-                if (widget.itemImagePath != null)
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(15),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.purple.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: primaryPurple),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      "Upload your clear photo and select an outfit to generate virtual try-on.",
+                      style: TextStyle(color: Color(0xFF4A2E7A), fontSize: 13),
                     ),
                     child: Row(
                       children: [
@@ -204,82 +534,97 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   ),
                 const SizedBox(height: 15),
 
-                // Display Area
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: accentPink.withOpacity(0.3)),
+            // 2. Selected Outfit Section
+            const Text(
+              "2. Selected Outfit",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () => _showBrandSelectionSheet(context),
+              child: Container(
+                height: 100,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.purple.shade200, width: 1.5),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 70,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.purple.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: _selectedGarmentUrl != null
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          _selectedGarmentUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.broken_image, color: primaryPurple, size: 30);
+                          },
+                        ),
+                      )
+                          : Icon(Icons.checkroom, color: primaryPurple, size: 35),
                     ),
-                    child: _isLoading
-                        ? Center(
+                    const SizedBox(width: 15),
+                    Expanded(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator(color: accentPink),
-                          const SizedBox(height: 15),
+                          const Text("Selected Garment", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          const SizedBox(height: 4),
                           Text(
-                            "Connecting to RapidAPI Diffusion Model...\nPlease Wait",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: primaryPurple, fontWeight: FontWeight.w600),
+                            _selectedGarmentUrl != null ? "Tap to change outfit" : "Tap to select from brands",
+                            style: TextStyle(color: accentPink, fontSize: 12, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
-                    )
-                        : _resultImageBytes != null
-                        ? Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check_circle, color: Colors.green, size: 22),
-                            SizedBox(width: 6),
-                            Text("Try-On Generated Successfully!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.memory(_resultImageBytes!, fit: BoxFit.cover, width: double.infinity),
-                          ),
-                        ),
-                      ],
-                    )
-                        : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _userPhoto == null
-                            ? Column(
-                          children: [
-                            Icon(Icons.person_add_alt_1, size: 60, color: accentPink),
-                            const SizedBox(height: 10),
-                            const Text("Upload Clear Photo (Business Rule)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                          ],
-                        )
-                            : Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.file(_userPhoto!, fit: BoxFit.cover, width: double.infinity),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        ElevatedButton.icon(
-                          onPressed: _pickUserPhoto,
-                          icon: const Icon(Icons.upload, size: 18),
-                          label: Text(_userPhoto == null ? "Upload Your Photo" : "Change Photo"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryPurple,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
+                    Icon(Icons.arrow_forward_ios, size: 16, color: primaryPurple),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Generate Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accentPink,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+              onPressed: _isGenerating ? null : _generateVirtualTryOn,
+              child: _isGenerating
+                  ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              )
+                  : const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+
+            if (_resultImageBytes != null) ...[
+              const SizedBox(height: 30),
+              const Text(
+                "3. Try-On Result",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.purple.shade200),
                 ),
                 const SizedBox(height: 15),
 
