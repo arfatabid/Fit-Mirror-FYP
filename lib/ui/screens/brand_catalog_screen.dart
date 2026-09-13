@@ -238,8 +238,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => VirtualTryOnScreen(
-                                itemTitle: item['title']!,
-                                itemImagePath: item['image']!,
+                                garmentImageUrl: item['image']!,
                               ),
                             ),
                           );

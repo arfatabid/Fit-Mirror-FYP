@@ -225,8 +225,8 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: bgLavender,
-                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.purple.shade50,
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.purple.shade100, width: 1.2),
                         ),
                         child: Center(
@@ -325,7 +325,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: bgLavender,
+                          color: Colors.purple.shade50,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.purple.shade100),
                         ),
@@ -369,17 +369,17 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
   }
 
   Future<void> _generateVirtualTryOn() async {
-    if (_userPhotoBytes == null) {
+    if (_userPhoto == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Please upload your photo first! (Business Rule)"),
+          content: Text("Please upload your photo first!"),
           backgroundColor: Colors.redAccent,
         ),
       );
       return;
     }
 
-    if (widget.itemImagePath == null) {
+    if (_selectedGarmentUrl == null) {
        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please select an item from the catalog first!"),
@@ -416,7 +416,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
       );
 
       // Load Garment Image from assets and attach (Clothing Image)
-      ByteData garmentByteData = await rootBundle.load(widget.itemImagePath!);
+      ByteData garmentByteData = await rootBundle.load(_selectedGarmentUrl!);
       List<int> garmentBytes = garmentByteData.buffer.asUint8List();
       request.files.add(
         http.MultipartFile.fromBytes(
@@ -494,45 +494,43 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       "Upload your clear photo and select an outfit to generate virtual try-on.",
                       style: TextStyle(color: Color(0xFF4A2E7A), fontSize: 13),
                     ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            widget.itemImagePath!,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text("Selected Outfit", style: TextStyle(fontSize: 11, color: Colors.grey)),
-                              Text(
-                                widget.itemTitle ?? "Unnamed Item",
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: primaryPurple),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Text("No item selected. Please select an item from the catalog."),
                   ),
-                const SizedBox(height: 15),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // 1. Your Photo Section
+            const Text(
+              "1. Your Photo",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: _pickUserPhoto,
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.purple.shade200, width: 1.5),
+                ),
+                child: _userPhoto != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.file(_userPhoto!, fit: BoxFit.cover, width: double.infinity),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_a_photo, color: primaryPurple, size: 40),
+                          const SizedBox(height: 8),
+                          Text("Tap to upload photo", style: TextStyle(color: primaryPurple, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 20),
 
             // 2. Selected Outfit Section
             const Text(
@@ -602,8 +600,8 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
-              onPressed: _isGenerating ? null : _generateVirtualTryOn,
-              child: _isGenerating
+              onPressed: _isLoading ? null : _generateVirtualTryOn,
+              child: _isLoading
                   ? const SizedBox(
                 width: 20,
                 height: 20,
@@ -626,27 +624,18 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.purple.shade200),
                 ),
-                const SizedBox(height: 15),
-
-                // Trigger Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _startRapidApiTryOn,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: accentPink,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    ),
-                    child: const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.memory(
+                    _resultImageBytes!,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            ], // closes if (_resultImageBytes != null) ...[
+          ], // closes children: [
+        ), // closes Column(
+      ), // closes SingleChildScrollView(
+    ); // closes Scaffold(
   }
 }
