@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildBrandItemWithImage("Ideas", "assets/images/ideas.png"),
                       _buildBrandItemWithImage("Breakout", "assets/images/breakout.png"),
                       _buildBrandItemWithImage("Outfitters", "assets/images/outfitters.png"),
-                      _buildBrandItemWithImage("Chase Value", "assets/images/chasevalue.png"),
+                      _buildBrandItemWithImage("ChaseValue", "assets/images/chasevalue.png"),
                     ],
                   ),
                 ),
