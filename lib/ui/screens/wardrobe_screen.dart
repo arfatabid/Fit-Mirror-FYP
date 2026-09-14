@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 import '../../services/database_service.dart';
 import 'virtual_try_on_screen.dart';
 
@@ -131,12 +132,19 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                   child: Container(
                     width: double.infinity,
                     color: Colors.grey.shade100,
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.image, size: 40, color: Colors.grey.shade400),
-                    ),
+                    child: imagePath.startsWith('assets/')
+                        ? Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.image, size: 40, color: Colors.grey.shade400),
+                          )
+                        : Image.file(
+                            File(imagePath),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.broken_image, size: 40, color: Colors.grey.shade400),
+                          ),
                   ),
                 ),
                 Positioned(

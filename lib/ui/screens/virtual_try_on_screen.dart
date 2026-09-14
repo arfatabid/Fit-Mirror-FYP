@@ -4,9 +4,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
-import 'dart:typed_data';
 import '../../services/database_service.dart';
 
 class VirtualTryOnScreen extends StatefulWidget {
@@ -419,7 +422,17 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
 
       // Load Garment Image from assets and attach (Clothing Image)
       ByteData garmentByteData = await rootBundle.load(_selectedGarmentUrl!);
-      List<int> garmentBytes = garmentByteData.buffer.asUint8List();
+      List<int> originalGarmentBytes = garmentByteData.buffer.asUint8List();
+      
+      // Upscale the garment image to avoid 'image_too_small' error from API
+      ui.Codec codec = await ui.instantiateImageCodec(
+        Uint8List.fromList(originalGarmentBytes),
+        targetWidth: 768, // Typical API min width
+      );
+      ui.FrameInfo frameInfo = await codec.getNextFrame();
+      ByteData? upscaledByteData = await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+      List<int> garmentBytes = upscaledByteData!.buffer.asUint8List();
+
       request.files.add(
         http.MultipartFile.fromBytes(
           'clothing_image',
@@ -467,7 +480,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
           "Virtual Try-On",
           style: TextStyle(color: Color(0xFF5E35B1), fontWeight: FontWeight.bold),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Color(0xFF5E35B1)),
         leading: Navigator.canPop(context)
             ? IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -476,67 +489,13 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
             : null,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 100.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 100.0, 16.0, 100.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.purple.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.purple.shade200),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: primaryPurple),
-                  const SizedBox(width: 10),
-                  const Expanded(
-                    child: Text(
-                      "Upload your clear photo and select an outfit to generate virtual try-on.",
-                      style: TextStyle(color: Color(0xFF4A2E7A), fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // 1. Your Photo Section
+            // 1. Selected Outfit Section
             const Text(
-              "1. Your Photo",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
-            ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: _pickUserPhoto,
-              child: Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.purple.shade50,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.purple.shade200, width: 1.5),
-                ),
-                child: _userPhoto != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.file(_userPhoto!, fit: BoxFit.cover, width: double.infinity),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_a_photo, color: primaryPurple, size: 40),
-                          const SizedBox(height: 8),
-                          Text("Tap to upload photo", style: TextStyle(color: primaryPurple, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // 2. Selected Outfit Section
-            const Text(
-              "2. Selected Outfit",
+              "1. Selected Outfit",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
             ),
             const SizedBox(height: 8),
@@ -627,6 +586,62 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   : const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
 
+            const SizedBox(height: 30),
+
+            // 2. Your Photo Section
+            const Text(
+              "2. Your Photo",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4A2E7A)),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: _pickUserPhoto,
+              child: Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.purple.shade200, width: 1.5),
+                ),
+                child: _userPhoto != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.file(_userPhoto!, fit: BoxFit.contain, width: double.infinity),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_a_photo, color: primaryPurple, size: 40),
+                          const SizedBox(height: 8),
+                          Text("Tap to upload photo", style: TextStyle(color: primaryPurple, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // Info Box
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.purple.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: primaryPurple),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      "Upload your clear photo and select an outfit to generate virtual try-on.",
+                      style: TextStyle(color: Color(0xFF4A2E7A), fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
             if (_resultImageBytes != null) ...[
               const SizedBox(height: 30),
               const Text(
@@ -635,7 +650,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
               ),
               const SizedBox(height: 8),
               Container(
-                height: 300,
+                height: 400,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -645,9 +660,46 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                   borderRadius: BorderRadius.circular(15),
                   child: Image.memory(
                     _resultImageBytes!,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryPurple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                ),
+                icon: const Icon(Icons.save_alt),
+                label: const Text("Save Result to Wardrobe", style: TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: () async {
+                  try {
+                    final directory = await getApplicationDocumentsDirectory();
+                    final fileName = 'try_on_${DateTime.now().millisecondsSinceEpoch}.png';
+                    final file = File('${directory.path}/$fileName');
+                    await file.writeAsBytes(_resultImageBytes!);
+                    
+                    await DatabaseService().addToWardrobe(name: 'Virtual Try-On', imagePath: file.path);
+                    
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text("Saved generated image to Wardrobe!"),
+                        backgroundColor: accentPink,
+                      ),
+                    );
+                  } catch (e) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Failed to save: $e"),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  }
+                },
               ),
             ], // closes if (_resultImageBytes != null) ...[
           ], // closes children: [
