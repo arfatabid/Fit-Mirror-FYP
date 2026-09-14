@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'brand_catalog_screen.dart';
 import 'virtual_try_on_screen.dart';
 import 'chat_screen.dart'; // ✅ Import added
+import 'wardrobe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -254,6 +255,13 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => VirtualTryOnScreen(), // ✅ Non-const call
+              ),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WardrobeScreen(),
               ),
             );
           } else {

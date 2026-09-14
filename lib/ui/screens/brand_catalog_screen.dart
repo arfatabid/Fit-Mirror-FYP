@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/database_service.dart';
 import 'virtual_try_on_screen.dart';
 
 class BrandCatalogScreen extends StatefulWidget {
@@ -260,28 +261,65 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                  child: Image.asset(
-                                    item['image']!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        color: primaryPurple.withOpacity(0.08),
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
-                                              const SizedBox(height: 4),
-                                              const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                      child: Image.asset(
+                                        item['image']!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            color: primaryPurple.withOpacity(0.08),
+                                            child: Center(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
+                                                  const SizedBox(height: 4),
+                                                  const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await DatabaseService().addToWardrobe(
+                                            name: item['title']!,
+                                            imagePath: item['image']!,
+                                          );
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text("Saved to Wardrobe!"),
+                                              backgroundColor: Color(0xFFE91E63),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.9),
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.1),
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
+                                              ),
                                             ],
                                           ),
+                                          child: const Icon(Icons.favorite_border, size: 20, color: Color(0xFFE91E63)),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               Padding(

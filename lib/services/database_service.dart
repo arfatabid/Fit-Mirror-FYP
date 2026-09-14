@@ -31,4 +31,37 @@ class DatabaseService {
     }
     return const Stream.empty();
   }
+
+  // Save item to wardrobe
+  Future<void> addToWardrobe({required String name, required String imagePath}) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await _db.collection('users').doc(user.uid).collection('wardrobe').add({
+        'name': name,
+        'imagePath': imagePath,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  // Remove item from wardrobe
+  Future<void> removeFromWardrobe(String docId) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await _db.collection('users').doc(user.uid).collection('wardrobe').doc(docId).delete();
+    }
+  }
+
+  // Get wardrobe items stream
+  Stream<QuerySnapshot> getWardrobeItems() {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return _db.collection('users')
+          .doc(user.uid)
+          .collection('wardrobe')
+          .orderBy('timestamp', descending: true)
+          .snapshots();
+    }
+    return const Stream.empty();
+  }
 }

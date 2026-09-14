@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'dart:typed_data';
+import '../../services/database_service.dart';
 
 class VirtualTryOnScreen extends StatefulWidget {
   final String? garmentImageUrl; // slected path in catalogue
@@ -586,6 +587,21 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                         ],
                       ),
                     ),
+                    if (_selectedGarmentUrl != null)
+                      IconButton(
+                        icon: Icon(Icons.favorite_border, color: accentPink),
+                        onPressed: () async {
+                          final name = _selectedGarmentUrl!.split('/').last.replaceAll('.png', '');
+                          await DatabaseService().addToWardrobe(name: name, imagePath: _selectedGarmentUrl!);
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text("Garment saved to Wardrobe!"),
+                              backgroundColor: accentPink,
+                            ),
+                          );
+                        },
+                      ),
                     Icon(Icons.arrow_forward_ios, size: 16, color: primaryPurple),
                   ],
                 ),
