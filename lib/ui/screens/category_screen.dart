@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
 import 'virtual_try_on_screen.dart';
 
-class BrandCatalogScreen extends StatefulWidget {
-  final String brandName;
+class CategoryScreen extends StatefulWidget {
+  final String categoryName;
 
-  const BrandCatalogScreen({super.key, required this.brandName});
+  const CategoryScreen({super.key, required this.categoryName});
 
   @override
-  State<BrandCatalogScreen> createState() => _BrandCatalogScreenState();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
+class _CategoryScreenState extends State<CategoryScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
@@ -25,7 +25,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          "${widget.brandName} Collection",
+          widget.categoryName == "Global Search" ? "Search Results" : "${widget.categoryName} Collection",
           style: TextStyle(color: primaryPurple, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: primaryPurple),
@@ -37,8 +37,9 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             fit: BoxFit.cover,
           ),
         ),
+        child: SafeArea(
           child: StreamBuilder<Object>(
-            stream: DatabaseService().getBrandCatalogItems(widget.brandName),
+            stream: DatabaseService().getAllCatalogItems(),
             builder: (context, catalogSnapshot) {
               if (catalogSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator(color: primaryPurple));
@@ -50,6 +51,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
 
               final catalogDocs = (catalogSnapshot.data as dynamic)?.docs ?? [];
               
+              // Convert to List<Map<String, String>> for existing logic
               List<Map<String, String>> items = catalogDocs.map<Map<String, String>>((doc) {
                 return {
                   "title": doc['title'].toString(),
@@ -57,7 +59,25 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                 };
               }).toList();
 
-              final filteredItems = items.where((item) {
+              // Initial filter by category
+              var categoryItems = items.where((item) {
+                final titleLower = item['title']!.toLowerCase();
+                // Simple keyword matching based on category
+                if (widget.categoryName == "Shalwar Kameez") {
+                  return titleLower.contains("shalwar") || titleLower.contains("kameez") || titleLower.contains("kurta") || titleLower.contains("kurti");
+                } else if (widget.categoryName == "Shirts") {
+                  return titleLower.contains("shirt") || titleLower.contains("tee") || titleLower.contains("polo") || titleLower.contains("top");
+                } else if (widget.categoryName == "Dresses") {
+                  return titleLower.contains("dress") || titleLower.contains("co-ords") || titleLower.contains("jump suit");
+                } else if (widget.categoryName == "Suits") {
+                  return titleLower.contains("suite") || titleLower.contains("suit");
+                } else if (widget.categoryName == "Global Search") {
+                  return true;
+                }
+                return titleLower.contains(widget.categoryName.toLowerCase());
+              }).toList();
+
+              final filteredItems = categoryItems.where((item) {
                 final titleLower = item['title']!.toLowerCase();
                 final query = searchQuery.toLowerCase();
                 return titleLower.contains(query);
@@ -86,7 +106,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: "Search in ${widget.brandName}...",
+                        hintText: widget.categoryName == "Global Search" ? "Search all brands..." : "Search in ${widget.categoryName}...",
                         hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                         prefixIcon: Icon(Icons.search, color: primaryPurple),
                         filled: true,
@@ -287,6 +307,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             }
           ),
         ),
+      ),
     );
   }
 }

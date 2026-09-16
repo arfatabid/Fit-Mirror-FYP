@@ -49,128 +49,7 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
     }
   }
 
-  // Brands aur unke garments ki list helper function
-  List<Map<String, String>> _getBrandItems(String brandName) {
-    List<String> fileNames = [];
-
-    if (brandName == "Ideas") {
-      fileNames = [
-        "Black & White Dress Women.png",
-        "Black Kurti Women.png",
-        "Black CasualShirt Men.png",
-        "Black WaisCoat Men.png",
-        "Blue kurti Women.png",
-        "Blue Long Suite Women.png",
-        "Blue WaisCoat Men.png",
-        "Cream CasualShirt Men.png",
-        "Cream Kurta Men.png",
-        "Dark Kurta Men.png",
-        "Green Suite Women.png",
-        "Light Green CasualShirt Men.png",
-        "Mehroon Shalwar Kameez Men.png",
-        "Off White Kurta Men.png",
-        "Pink Suite Women.png",
-        "Purple Suite Women.png",
-        "Purple White Suite Women.png",
-        "Red Dress Women.png",
-        "Red Long Suite Women.png",
-        "Silver Pine Shalwar Kameez Men.png",
-        "Skin WaisCoat Men.png",
-        "White Shalwar Kameez Men.png",
-        "Yellow Dress Women.png",
-        "Yellow Shirt Women.png",
-      ];
-    } else if (brandName == "Breakout") {
-      fileNames = [
-        "Black Shirt Men.png",
-        "Black Shirt Women.png",
-        "Black SweatShirt Women.png",
-        "Black Tee Men.png",
-        "Brown SweatShirt Men.png",
-        "Brown Tees Women.png",
-        "Green Top Women.png",
-        "Grey Polos Men.png",
-        "Grey Shirt Men.png",
-        "Grey Tees Women.png",
-        "Grey SweatShirt Men.png",
-        "Mehroon Top Women.png",
-        "Navy Sweatshirt Women.png",
-        "Red SweatShirt Men.png",
-        "Skin Shirt Women.png",
-        "Skin Tees Women.png",
-        "Sky Blue Shirt Men.png",
-        "White Brown Lines Tees Men.png",
-        "White Cream Polos Men.png",
-        "White Polos Men.png",
-        "White Shirt Women.png",
-        "White SweatShirt Women.png",
-        "White Tees Men.png",
-        "Yellow Top Women.png",
-      ];
-    } else if (brandName == "Outfitters") {
-      fileNames = [
-        "Black Brown Active Wear Women.png",
-        "Black Jump Suit Women.png",
-        "Black Shirt Women.png",
-        "Black T-Shirt Men.png",
-        "Blue Active Wear Men.png",
-        "Blue Black Jump Suit Women.png",
-        "Blue Shirt Women.png",
-        "Brown Red Active Wear Women.png",
-        "Dark Blue Brown Active Wear Women.png",
-        "Green Active Wear Men.png",
-        "Green Shirt Men.png",
-        "Mehroon Polo Shirt Men.png",
-        "Pink T-Shirt Men.png",
-        "Skin T-Shirt Women.png",
-        "White Active Wear Tank Top Men.png",
-        "White Flower Shirt Men.png",
-        "White Jump Suit Women.png",
-        "White Polo Shirt Men.png",
-        "White Purple T-Shirts Women.png",
-        "White Shirt Men.png",
-        "White Shirt Women.png",
-        "White T-Shirt Men.png",
-        "White T-Shirts Women.png",
-        "Yellow Polo Shirt Men.png",
-      ];
-    } else if (brandName == "ChaseValue") {
-      fileNames = [
-        "black co-ords women.png",
-        "black red tracksuit women.png",
-        "blue kurti women.png",
-        "blue red t-shirt women.png",
-        "blue t-shirt women.png",
-        "brown t-shirt women.png",
-        "chasevalue men kameez shalwar brown.png",
-        "chasevalue men kameez shalwar grey.png",
-        "chasevalue men kameez shalwar white.png",
-        "chasevalue men kurta black.png",
-        "chasevalue men kurta brown.png",
-        "chasevalue men kurta grey.png",
-        "chasevalue men polo shirt black.png",
-        "chasevalue men polo shirt blue.png",
-        "chasevalue men polo shirt white.png",
-        "chasevalue men waist coat black.png",
-        "chasevalue men waist coat brown.png",
-        "green tracksuit women.png",
-        "grey co-ords women.png",
-        "grey kurti women.png",
-        "mehroon kurti women.png",
-        "orange co-ords women.png",
-        "purple t-shirt women.png",
-        "white strip shirt men.png",
-      ];
-    }
-
-    return fileNames.map((file) {
-      String title = file.replaceAll(RegExp(r'\.(png|jpg|jpeg)', caseSensitive: false), '');
-      return {
-        "title": title,
-        "image": "assets/Brands/$brandName/$file",
-      };
-    }).toList();
-  }
+  // We will fetch garments directly from Firestore now in _showGarmentsSelectionSheet
 
   // 1. Brands select karne ke liye Bottom Sheet (Sirf clear logos without text overlap)
   void _showBrandSelectionSheet(BuildContext context) {
@@ -264,8 +143,6 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
 
   // 2. Selected Brand ke Garments select karne ke liye Bottom Sheet
   void _showGarmentsSelectionSheet(BuildContext context, String brandName) {
-    final garments = _getBrandItems(brandName);
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -311,59 +188,84 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
               ),
               const SizedBox(height: 15),
               Expanded(
-                child: GridView.builder(
-                  itemCount: garments.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = garments[index];
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          _selectedGarmentUrl = item['image'];
-                        });
-                        Navigator.pop(context); // Close sheet
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.purple.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.purple.shade100),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                child: Image.asset(
-                                  item['image']!,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Center(child: Icon(Icons.broken_image));
-                                  },
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                item['title']!,
-                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                child: StreamBuilder<Object>(
+                  stream: DatabaseService().getBrandCatalogItems(brandName),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator(color: primaryPurple));
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text("Error loading garments."));
+                    }
+                    
+                    final docs = (snapshot.data as dynamic)?.docs ?? [];
+                    if (docs.isEmpty) {
+                      return const Center(child: Text("No items available."));
+                    }
+
+                    return GridView.builder(
+                      itemCount: docs.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.75,
                       ),
+                      itemBuilder: (context, index) {
+                        final item = docs[index];
+                        final String title = item['title'];
+                        final String image = item['image'];
+
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedGarmentUrl = image;
+                            });
+                            Navigator.pop(context); // Close sheet
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.purple.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.purple.shade100),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                    child: image.startsWith('http')
+                                        ? Image.network(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+                                          )
+                                        : Image.asset(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    title,
+                                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     );
-                  },
+                  }
                 ),
               ),
             ],
@@ -420,9 +322,19 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
         ),
       );
 
-      // Load Garment Image from assets and attach (Clothing Image)
-      ByteData garmentByteData = await rootBundle.load(_selectedGarmentUrl!);
-      List<int> originalGarmentBytes = garmentByteData.buffer.asUint8List();
+      // Load Garment Image (from network or assets)
+      List<int> originalGarmentBytes;
+      if (_selectedGarmentUrl!.startsWith('http')) {
+        final garmentResponse = await http.get(Uri.parse(_selectedGarmentUrl!));
+        if (garmentResponse.statusCode == 200) {
+          originalGarmentBytes = garmentResponse.bodyBytes;
+        } else {
+          throw Exception("Failed to load garment image from network");
+        }
+      } else {
+        ByteData garmentByteData = await rootBundle.load(_selectedGarmentUrl!);
+        originalGarmentBytes = garmentByteData.buffer.asUint8List();
+      }
       
       // Upscale the garment image to avoid 'image_too_small' error from API
       ui.Codec codec = await ui.instantiateImageCodec(
@@ -446,6 +358,9 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
+        // Increment global try on count for analytics
+        await DatabaseService().incrementTryOnCount();
+
         // The API returns the raw image bytes directly
         if (!mounted) return;
         setState(() {
@@ -521,13 +436,21 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       child: _selectedGarmentUrl != null
                           ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          _selectedGarmentUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.broken_image, color: primaryPurple, size: 30);
-                          },
-                        ),
+                        child: _selectedGarmentUrl!.startsWith('http')
+                            ? Image.network(
+                                _selectedGarmentUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.broken_image, color: primaryPurple, size: 30);
+                                },
+                              )
+                            : Image.asset(
+                                _selectedGarmentUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.broken_image, color: primaryPurple, size: 30);
+                                },
+                              ),
                       )
                           : Icon(Icons.checkroom, color: primaryPurple, size: 35),
                     ),
@@ -547,45 +470,54 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       ),
                     ),
                     if (_selectedGarmentUrl != null)
-                      IconButton(
-                        icon: Icon(Icons.favorite_border, color: accentPink),
-                        onPressed: () async {
-                          final name = _selectedGarmentUrl!.split('/').last.replaceAll('.png', '');
-                          await DatabaseService().addToWardrobe(name: name, imagePath: _selectedGarmentUrl!);
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text("Garment saved to Wardrobe!"),
-                              backgroundColor: accentPink,
+                      StreamBuilder<Object>(
+                        stream: DatabaseService().getWardrobeItems(),
+                        builder: (context, snapshot) {
+                          bool isSaved = false;
+                          if (snapshot.hasData) {
+                            final docs = (snapshot.data as dynamic).docs;
+                            for (var doc in docs) {
+                              if (doc['imagePath'] == _selectedGarmentUrl) {
+                                isSaved = true;
+                                break;
+                              }
+                            }
+                          }
+                          return IconButton(
+                            icon: Icon(
+                              isSaved ? Icons.favorite : Icons.favorite_border,
+                              color: accentPink,
                             ),
+                            onPressed: () async {
+                              if (isSaved) {
+                                await DatabaseService().removeByImagePath(_selectedGarmentUrl!);
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Removed from Wardrobe!"),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                );
+                              } else {
+                                final name = _selectedGarmentUrl!.split('/').last.replaceAll('.png', '');
+                                await DatabaseService().addToWardrobe(name: name, imagePath: _selectedGarmentUrl!);
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text("Garment saved to Wardrobe!"),
+                                    backgroundColor: accentPink,
+                                  ),
+                                );
+                              }
+                            },
                           );
-                        },
+                        }
                       ),
                     Icon(Icons.arrow_forward_ios, size: 16, color: primaryPurple),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-
-            // Generate Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: accentPink,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              ),
-              onPressed: _isLoading ? null : _generateVirtualTryOn,
-              child: _isLoading
-                  ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-              )
-                  : const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            ),
-
             const SizedBox(height: 30),
 
             // 2. Your Photo Section
@@ -642,6 +574,26 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
               ),
             ),
             
+            const SizedBox(height: 30),
+
+            // Generate Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accentPink,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+              onPressed: _isLoading ? null : _generateVirtualTryOn,
+              child: _isLoading
+                  ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              )
+                  : const Text("Generate Virtual Try-On", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+
             if (_resultImageBytes != null) ...[
               const SizedBox(height: 30),
               const Text(

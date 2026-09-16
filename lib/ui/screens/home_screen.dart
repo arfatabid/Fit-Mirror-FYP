@@ -1,9 +1,16 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'brand_catalog_screen.dart';
 import 'virtual_try_on_screen.dart';
-import 'chat_screen.dart'; // ✅ Import added
+import 'chat_screen.dart';
 import 'wardrobe_screen.dart';
+import 'category_screen.dart';
+import 'login_screen.dart';
+
+import 'admin/manage_users_screen.dart';
+import 'admin/manage_catalog_screen.dart';
+import 'admin/analytics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,15 +24,83 @@ class _HomeScreenState extends State<HomeScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
+  final List<Widget> _pages = [
+    const _HomeContent(),
+    const ChatScreen(),
+    const VirtualTryOnScreen(),
+    const WardrobeScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       extendBody: true,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _currentIndex,
+        height: 60.0,
+        items: <Widget>[
+          Icon(
+            Icons.home_filled,
+            size: 28,
+            color: _currentIndex == 0 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+          Icon(
+            Icons.support_agent,
+            size: 28,
+            color: _currentIndex == 1 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+          Icon(
+            Icons.camera_alt,
+            size: 28,
+            color: _currentIndex == 2 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+          Icon(
+            Icons.checkroom,
+            size: 28,
+            color: _currentIndex == 3 ? Colors.white : primaryPurple.withOpacity(0.7),
+          ),
+        ],
+        color: Colors.white,
+        buttonBackgroundColor: primaryPurple,
+        backgroundColor: Colors.transparent,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+    );
+  }
+}
+
+class _HomeContent extends StatefulWidget {
+  const _HomeContent();
+
+  @override
+  State<_HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<_HomeContent> {
+  final Color primaryPurple = const Color(0xFF5E35B1);
+  final Color accentPink = const Color(0xFFE91E63);
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isAdmin = FirebaseAuth.instance.currentUser?.email == 'admin@fitmirror.com';
+    
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      drawer: isAdmin ? _buildAdminDrawer(context) : null,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: isAdmin,
         title: Text(
           "Fit Mirror",
           style: TextStyle(
@@ -35,6 +110,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout, color: primaryPurple),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (route) => false,
+                );
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -53,34 +143,45 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Search Bar Section
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFFE1BEE7).withOpacity(0.4),
-                        Colors.white.withOpacity(0.9),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CategoryScreen(categoryName: "Global Search"),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFFE1BEE7).withOpacity(0.4),
+                          Colors.white.withOpacity(0.9),
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: primaryPurple.withOpacity(0.12)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryPurple.withOpacity(0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
                       ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
                     ),
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: primaryPurple.withOpacity(0.12)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryPurple.withOpacity(0.04),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      )
-                    ],
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search for products, brands a...",
-                      hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 13),
-                      prefixIcon: Icon(Icons.search, color: primaryPurple),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                    child: TextField(
+                      enabled: false, // Disable typing directly here, we navigate to CategoryScreen
+                      decoration: InputDecoration(
+                        hintText: "Search for products, brands a...",
+                        hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                        prefixIcon: Icon(Icons.search, color: primaryPurple),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
                     ),
                   ),
                 ),
@@ -155,16 +256,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildCategoryCard(
-                        "Shalwar Kameez",
-                        imagePath: "assets/images/shalwar_kameez.png",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shalwar Kameez")));
+                        },
+                        child: _buildCategoryCard(
+                          "Shalwar Kameez",
+                          imagePath: "assets/images/shalwar_kameez.png",
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: _buildCategoryCard(
-                        "Shirts",
-                        imagePath: "assets/images/shirt.png",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shirts")));
+                        },
+                        child: _buildCategoryCard(
+                          "Shirts",
+                          imagePath: "assets/images/shirt.png",
+                        ),
                       ),
                     ),
                   ],
@@ -188,16 +299,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildCategoryCard(
-                        "Dresses",
-                        imagePath: "assets/images/dresses.png",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Dresses")));
+                        },
+                        child: _buildCategoryCard(
+                          "Dresses",
+                          imagePath: "assets/images/dresses.png",
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: _buildCategoryCard(
-                        "Suits",
-                        imagePath: "assets/images/suits.png",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Suits")));
+                        },
+                        child: _buildCategoryCard(
+                          "Suits",
+                          imagePath: "assets/images/suits.png",
+                        ),
                       ),
                     ),
                   ],
@@ -209,67 +330,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _currentIndex,
-        height: 60.0,
-        items: <Widget>[
-          Icon(
-            Icons.home_filled,
-            size: 28,
-            color: _currentIndex == 0 ? Colors.white : primaryPurple.withOpacity(0.7),
-          ),
-          Icon(
-            Icons.support_agent,
-            size: 28,
-            color: _currentIndex == 1 ? Colors.white : primaryPurple.withOpacity(0.7),
-          ),
-          Icon(
-            Icons.camera_alt,
-            size: 28,
-            color: _currentIndex == 2 ? Colors.white : primaryPurple.withOpacity(0.7),
-          ),
-          Icon(
-            Icons.checkroom,
-            size: 28,
-            color: _currentIndex == 3 ? Colors.white : primaryPurple.withOpacity(0.7),
-          ),
-        ],
-        color: Colors.white,
-        buttonBackgroundColor: primaryPurple,
-        backgroundColor: Colors.transparent,
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 300),
-        onTap: (index) {
-          if (index == 1) {
-            // Support agent icon par click hone par ChatScreen par navigate karein
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ChatScreen(),
-              ),
-            );
-          } else if (index == 2) {
-            // Camera icon par click hone par VirtualTryOnScreen par navigate karein (WITHOUT const)
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VirtualTryOnScreen(), // ✅ Non-const call
-              ),
-            );
-          } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const WardrobeScreen(),
-              ),
-            );
-          } else {
-            setState(() {
-              _currentIndex = index;
-            });
-          }
-        },
       ),
     );
   }
@@ -401,6 +461,64 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: imagePath != null ? Colors.white : Colors.black87,
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildAdminDrawer(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: const Color(0xFFF3E5F5),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color(0xFF5E35B1),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Icon(Icons.admin_panel_settings, color: Colors.white, size: 48),
+                  SizedBox(height: 10),
+                  Text(
+                    'Admin Panel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.people, color: Color(0xFF5E35B1)),
+              title: const Text('Manage Users'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ManageUsersScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shopping_bag, color: Color(0xFF5E35B1)),
+              title: const Text('Manage Catalog'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ManageCatalogScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.analytics, color: Color(0xFF5E35B1)),
+              title: const Text('App Analytics'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AnalyticsScreen()));
+              },
             ),
           ],
         ),
