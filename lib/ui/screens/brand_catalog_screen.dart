@@ -37,6 +37,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             fit: BoxFit.cover,
           ),
         ),
+        child: SafeArea(
           child: StreamBuilder<Object>(
             stream: DatabaseService().getBrandCatalogItems(widget.brandName),
             builder: (context, catalogSnapshot) {
@@ -75,7 +76,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   }
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: kToolbarHeight + 10.0, bottom: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -287,6 +288,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             }
           ),
         ),
+      ),
     );
   }
 }
