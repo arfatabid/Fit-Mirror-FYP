@@ -21,7 +21,7 @@ class DatabaseService {
     }
   }
 
-  // Get chat history stream
+  // Get chat history 
   Stream<QuerySnapshot> getChatMessages() {
     final user = _auth.currentUser;
     if (user != null) {
@@ -70,7 +70,7 @@ class DatabaseService {
     }
   }
 
-  // Get wardrobe items stream
+  // Get wardrobe items 
   Stream<QuerySnapshot> getWardrobeItems() {
     final user = _auth.currentUser;
     if (user != null) {
