@@ -124,31 +124,26 @@ class DatabaseService {
 
   // Storage: Upload Brand Image
   Future<String?> uploadBrandImage(File imageFile, String brandName, String dressName) async {
-    try {
-      final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${dressName.replaceAll(" ", "_")}.png';
-      final Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('Brands')
-          .child(brandName)
-          .child(fileName);
+    final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${dressName.replaceAll(" ", "_")}.png';
+    final Reference storageRef = FirebaseStorage.instance
+        .ref()
+        .child('Brands')
+        .child(brandName)
+        .child(fileName);
 
-      final UploadTask uploadTask = storageRef.putFile(imageFile);
-      final TaskSnapshot snapshot = await uploadTask;
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
-      
-      // Save metadata to Firestore catalog collection
-      await _db.collection('catalog').add({
-        'title': dressName,
-        'image': downloadUrl,
-        'brand': brandName,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      
-      return downloadUrl;
-    } catch (e) {
-      print("Error uploading image: $e");
-      return null;
-    }
+    final UploadTask uploadTask = storageRef.putFile(imageFile);
+    final TaskSnapshot snapshot = await uploadTask;
+    final String downloadUrl = await snapshot.ref.getDownloadURL();
+    
+    // Save metadata to Firestore catalog collection
+    await _db.collection('catalog').add({
+      'title': dressName,
+      'image': downloadUrl,
+      'brand': brandName,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    
+    return downloadUrl;
   }
 
   // --- CATALOG FETCHING ---
