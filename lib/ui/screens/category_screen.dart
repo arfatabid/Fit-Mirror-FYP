@@ -4,8 +4,9 @@ import 'virtual_try_on_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
+  final String? gender;
 
-  const CategoryScreen({super.key, required this.categoryName});
+  const CategoryScreen({super.key, required this.categoryName, this.gender});
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -62,6 +63,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
               // Initial filter by category
               var categoryItems = items.where((item) {
                 final titleLower = item['title']!.toLowerCase();
+                
+                if (widget.gender != null) {
+                  final RegExp genderRegex = RegExp(r'\b' + widget.gender!.toLowerCase() + r'\b');
+                  if (!genderRegex.hasMatch(titleLower)) {
+                    return false;
+                  }
+                }
+
                 // Simple keyword matching based on category
                 if (widget.categoryName == "Shalwar Kameez") {
                   return titleLower.contains("shalwar") || titleLower.contains("kameez") || titleLower.contains("kurta") || titleLower.contains("kurti");

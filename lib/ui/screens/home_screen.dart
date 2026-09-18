@@ -258,7 +258,7 @@ class _HomeContentState extends State<_HomeContent> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shalwar Kameez")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shalwar Kameez", gender: "Men")));
                         },
                         child: _buildCategoryCard(
                           "Shalwar Kameez",
@@ -270,7 +270,7 @@ class _HomeContentState extends State<_HomeContent> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shirts")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Shirts", gender: "Men")));
                         },
                         child: _buildCategoryCard(
                           "Shirts",
@@ -301,7 +301,7 @@ class _HomeContentState extends State<_HomeContent> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Dresses")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Dresses", gender: "Women")));
                         },
                         child: _buildCategoryCard(
                           "Dresses",
@@ -313,7 +313,7 @@ class _HomeContentState extends State<_HomeContent> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Suits")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen(categoryName: "Suits", gender: "Women")));
                         },
                         child: _buildCategoryCard(
                           "Suits",
