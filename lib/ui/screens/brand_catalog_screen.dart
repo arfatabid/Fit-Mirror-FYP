@@ -16,6 +16,15 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color accentPink = const Color(0xFFE91E63);
 
   String searchQuery = "";
+  late Stream<Object> _catalogStream;
+  late Stream<Object> _wardrobeStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _catalogStream = DatabaseService().getBrandCatalogItems(widget.brandName);
+    _wardrobeStream = DatabaseService().getWardrobeItems();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +48,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         ),
         child: SafeArea(
           child: StreamBuilder<Object>(
-            stream: DatabaseService().getBrandCatalogItems(widget.brandName),
+            stream: _catalogStream,
             builder: (context, catalogSnapshot) {
               if (catalogSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator(color: primaryPurple));
@@ -65,7 +74,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
               }).toList();
 
               return StreamBuilder<Object>(
-                stream: DatabaseService().getWardrobeItems(),
+                stream: _wardrobeStream,
                 builder: (context, snapshot) {
                   Set<String> savedItems = {};
                   if (snapshot.hasData) {
