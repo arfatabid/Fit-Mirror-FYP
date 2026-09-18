@@ -131,8 +131,14 @@ class DatabaseService {
         .child(brandName)
         .child(fileName);
 
-    final UploadTask uploadTask = storageRef.putFile(imageFile);
+    final SettableMetadata metadata = SettableMetadata(contentType: 'image/png');
+    final UploadTask uploadTask = storageRef.putData(await imageFile.readAsBytes(), metadata);
     final TaskSnapshot snapshot = await uploadTask;
+    
+    if (snapshot.state != TaskState.success) {
+      throw Exception('Upload task failed with state: ${snapshot.state}');
+    }
+    
     final String downloadUrl = await snapshot.ref.getDownloadURL();
     
     // Save metadata to Firestore catalog collection
