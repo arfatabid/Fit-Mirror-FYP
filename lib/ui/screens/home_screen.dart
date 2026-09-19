@@ -9,7 +9,6 @@ import 'category_screen.dart';
 import 'login_screen.dart';
 
 import 'admin/manage_users_screen.dart';
-import 'admin/manage_catalog_screen.dart';
 import 'admin/analytics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -502,14 +501,6 @@ class _HomeContentState extends State<_HomeContent> {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ManageUsersScreen()));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.shopping_bag, color: Color(0xFF5E35B1)),
-              title: const Text('Manage Catalog'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ManageCatalogScreen()));
               },
             ),
             ListTile(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
+import '../../services/local_catalog_service.dart';
 import 'virtual_try_on_screen.dart';
 
 class BrandCatalogScreen extends StatefulWidget {
@@ -16,13 +17,13 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color accentPink = const Color(0xFFE91E63);
 
   String searchQuery = "";
-  late Stream<Object> _catalogStream;
   late Stream<Object> _wardrobeStream;
+  late List<Map<String, String>> _catalogItems;
 
   @override
   void initState() {
     super.initState();
-    _catalogStream = DatabaseService().getBrandCatalogItems(widget.brandName);
+    _catalogItems = LocalCatalogService.getBrandCatalogItems(widget.brandName);
     _wardrobeStream = DatabaseService().getWardrobeItems();
   }
 
@@ -47,27 +48,9 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
           ),
         ),
         child: SafeArea(
-          child: StreamBuilder<Object>(
-            stream: _catalogStream,
-            builder: (context, catalogSnapshot) {
-              if (catalogSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: primaryPurple));
-              }
-              
-              if (catalogSnapshot.hasError) {
-                return const Center(child: Text("Error loading catalog"));
-              }
-
-              final catalogDocs = (catalogSnapshot.data as dynamic)?.docs ?? [];
-              
-              List<Map<String, String>> items = catalogDocs.map<Map<String, String>>((doc) {
-                return {
-                  "title": doc['title'].toString(),
-                  "image": doc['image'].toString(),
-                };
-              }).toList();
-
-              final filteredItems = items.where((item) {
+          child: Builder(
+            builder: (context) {
+              final filteredItems = _catalogItems.where((item) {
                 final titleLower = item['title']!.toLowerCase();
                 final query = searchQuery.toLowerCase();
                 return titleLower.contains(query);
