@@ -3,16 +3,17 @@ import '../../services/database_service.dart';
 import '../../services/local_catalog_service.dart';
 import 'virtual_try_on_screen.dart';
 
-class BrandCatalogScreen extends StatefulWidget {
-  final String brandName;
+class CategoryScreen extends StatefulWidget {
+  final String categoryName;
+  final String? gender;
 
-  const BrandCatalogScreen({super.key, required this.brandName});
+  const CategoryScreen({super.key, required this.categoryName, this.gender});
 
   @override
-  State<BrandCatalogScreen> createState() => _BrandCatalogScreenState();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
+class _CategoryScreenState extends State<CategoryScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
   final Color accentPink = const Color(0xFFE91E63);
 
@@ -23,7 +24,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   @override
   void initState() {
     super.initState();
-    _catalogItems = LocalCatalogService.getBrandCatalogItems(widget.brandName);
+    _catalogItems = LocalCatalogService.getAllCatalogItems();
     _wardrobeStream = DatabaseService().getWardrobeItems();
   }
 
@@ -35,7 +36,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          "${widget.brandName} Collection",
+          widget.categoryName == "Global Search" ? "Search Results" : "${widget.categoryName} Collection",
           style: TextStyle(color: primaryPurple, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: primaryPurple),
@@ -50,7 +51,33 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
         child: SafeArea(
           child: Builder(
             builder: (context) {
-              final filteredItems = _catalogItems.where((item) {
+              // Initial filter by category
+              var categoryItems = _catalogItems.where((item) {
+                final titleLower = item['title']!.toLowerCase();
+                
+                if (widget.gender != null) {
+                  final RegExp genderRegex = RegExp(r'\b' + widget.gender!.toLowerCase() + r'\b');
+                  if (!genderRegex.hasMatch(titleLower)) {
+                    return false;
+                  }
+                }
+
+                // Simple keyword matching based on category
+                if (widget.categoryName == "Shalwar Kameez") {
+                  return titleLower.contains("shalwar") || titleLower.contains("kameez") || titleLower.contains("kurta") || titleLower.contains("kurti");
+                } else if (widget.categoryName == "Shirts") {
+                  return titleLower.contains("shirt") || titleLower.contains("tee") || titleLower.contains("polo") || titleLower.contains("top");
+                } else if (widget.categoryName == "Dresses") {
+                  return titleLower.contains("dress") || titleLower.contains("co-ords") || titleLower.contains("jump suit");
+                } else if (widget.categoryName == "Suits") {
+                  return titleLower.contains("suite") || titleLower.contains("suit");
+                } else if (widget.categoryName == "Global Search") {
+                  return true;
+                }
+                return titleLower.contains(widget.categoryName.toLowerCase());
+              }).toList();
+
+              final filteredItems = categoryItems.where((item) {
                 final titleLower = item['title']!.toLowerCase();
                 final query = searchQuery.toLowerCase();
                 return titleLower.contains(query);
@@ -79,7 +106,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: "Search in ${widget.brandName}...",
+                        hintText: widget.categoryName == "Global Search" ? "Search all brands..." : "Search in ${widget.categoryName}...",
                         hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                         prefixIcon: Icon(Icons.search, color: primaryPurple),
                         filled: true,
