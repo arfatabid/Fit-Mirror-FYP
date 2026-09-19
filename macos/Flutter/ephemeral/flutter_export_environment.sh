@@ -1,8 +1,14 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
+<<<<<<< HEAD
+export "FLUTTER_ROOT=C:\FlutterDev\sdk\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Fit-Mirror-FYP"
+export "FLUTTER_FRAMEWORK_SWIFT_PACKAGE_PATH=C:\Fit-Mirror-FYP\macos\Flutter\ephemeral\Packages\.packages\FlutterFramework"
+=======
 export "FLUTTER_ROOT=C:\flutter"
 export "FLUTTER_APPLICATION_PATH=C:\fatima\fyp 3\Fit-Mirror-FYP"
 export "FLUTTER_FRAMEWORK_SWIFT_PACKAGE_PATH=C:\fatima\fyp 3\Fit-Mirror-FYP\macos\Flutter\ephemeral\Packages\.packages\FlutterFramework"
+>>>>>>> 6a4facd48e50f1d105e1befc5ffd919028fddd6a
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
