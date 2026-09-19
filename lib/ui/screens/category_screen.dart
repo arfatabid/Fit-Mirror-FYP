@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
+import '../../services/local_catalog_service.dart';
 import 'virtual_try_on_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -17,6 +18,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
   final Color accentPink = const Color(0xFFE91E63);
 
   String searchQuery = "";
+  late Stream<Object> _wardrobeStream;
+  late List<Map<String, String>> _catalogItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _catalogItems = LocalCatalogService.getAllCatalogItems();
+    _wardrobeStream = DatabaseService().getWardrobeItems();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,29 +49,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ),
         child: SafeArea(
-          child: StreamBuilder<Object>(
-            stream: DatabaseService().getAllCatalogItems(),
-            builder: (context, catalogSnapshot) {
-              if (catalogSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: primaryPurple));
-              }
-              
-              if (catalogSnapshot.hasError) {
-                return const Center(child: Text("Error loading catalog"));
-              }
-
-              final catalogDocs = (catalogSnapshot.data as dynamic)?.docs ?? [];
-              
-              // Convert to List<Map<String, String>> for existing logic
-              List<Map<String, String>> items = catalogDocs.map<Map<String, String>>((doc) {
-                return {
-                  "title": doc['title'].toString(),
-                  "image": doc['image'].toString(),
-                };
-              }).toList();
-
+          child: Builder(
+            builder: (context) {
               // Initial filter by category
-              var categoryItems = items.where((item) {
+              var categoryItems = _catalogItems.where((item) {
                 final titleLower = item['title']!.toLowerCase();
                 
                 if (widget.gender != null) {
@@ -93,7 +84,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               }).toList();
 
               return StreamBuilder<Object>(
-                stream: DatabaseService().getWardrobeItems(),
+                stream: _wardrobeStream,
                 builder: (context, snapshot) {
                   Set<String> savedItems = {};
                   if (snapshot.hasData) {
@@ -104,7 +95,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   }
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: kToolbarHeight + 10.0, bottom: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

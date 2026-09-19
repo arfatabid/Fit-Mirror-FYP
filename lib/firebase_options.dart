@@ -36,7 +36,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '276799056898',
     projectId: 'fitmirrorfyp',
     authDomain: 'fitmirrorfyp.firebaseapp.com',
-    storageBucket: 'fitmirrorfyp.firebasestorage.app',
+    storageBucket: 'fitmirrorfyp.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
     appId: '1:276799056898:android:fccc3c7d6ecae63f120b1b',
     messagingSenderId: '276799056898',
     projectId: 'fitmirrorfyp',
-    storageBucket: 'fitmirrorfyp.firebasestorage.app',
+    storageBucket: 'fitmirrorfyp.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
     appId: '1:276799056898:ios:1e7ea77e10b1e9fb4946b3',
     messagingSenderId: '276799056898',
     projectId: 'fitmirrorfyp',
-    storageBucket: 'fitmirrorfyp.firebasestorage.app',
+    storageBucket: 'fitmirrorfyp.appspot.com',
     iosBundleId: 'com.example.fitMirrorProject',
   );
 
@@ -61,7 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:276799056898:ios:1e7ea77e10b1e9fb4946b3',
     messagingSenderId: '276799056898',
     projectId: 'fitmirrorfyp',
-    storageBucket: 'fitmirrorfyp.firebasestorage.app',
+    storageBucket: 'fitmirrorfyp.appspot.com',
     iosBundleId: 'com.example.fitMirrorProject',
   );
 
@@ -71,6 +71,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '276799056898',
     projectId: 'fitmirrorfyp',
     authDomain: 'fitmirrorfyp.firebaseapp.com',
-    storageBucket: 'fitmirrorfyp.firebasestorage.app',
+    storageBucket: 'fitmirrorfyp.appspot.com',
   );
 }

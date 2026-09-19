@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'manage_users_screen.dart';
-import 'manage_catalog_screen.dart';
 import '../login_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
@@ -70,18 +69,6 @@ class AdminHomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 20),
-            _buildAdminCard(
-              context,
-              title: "Manage Catalog",
-              icon: Icons.storefront,
-              color: Colors.orangeAccent,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ManageCatalogScreen()),
-                );
-              },
             ),
           ],
         ),

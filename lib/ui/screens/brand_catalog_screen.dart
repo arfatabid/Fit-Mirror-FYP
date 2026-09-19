@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
+import '../../services/local_catalog_service.dart';
 import 'virtual_try_on_screen.dart';
 
 class BrandCatalogScreen extends StatefulWidget {
@@ -16,6 +17,15 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color accentPink = const Color(0xFFE91E63);
 
   String searchQuery = "";
+  late Stream<Object> _wardrobeStream;
+  late List<Map<String, String>> _catalogItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _catalogItems = LocalCatalogService.getBrandCatalogItems(widget.brandName);
+    _wardrobeStream = DatabaseService().getWardrobeItems();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,34 +47,17 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             fit: BoxFit.cover,
           ),
         ),
-          child: StreamBuilder<Object>(
-            stream: DatabaseService().getBrandCatalogItems(widget.brandName),
-            builder: (context, catalogSnapshot) {
-              if (catalogSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: primaryPurple));
-              }
-              
-              if (catalogSnapshot.hasError) {
-                return const Center(child: Text("Error loading catalog"));
-              }
-
-              final catalogDocs = (catalogSnapshot.data as dynamic)?.docs ?? [];
-              
-              List<Map<String, String>> items = catalogDocs.map<Map<String, String>>((doc) {
-                return {
-                  "title": doc['title'].toString(),
-                  "image": doc['image'].toString(),
-                };
-              }).toList();
-
-              final filteredItems = items.where((item) {
+        child: SafeArea(
+          child: Builder(
+            builder: (context) {
+              final filteredItems = _catalogItems.where((item) {
                 final titleLower = item['title']!.toLowerCase();
                 final query = searchQuery.toLowerCase();
                 return titleLower.contains(query);
               }).toList();
 
               return StreamBuilder<Object>(
-                stream: DatabaseService().getWardrobeItems(),
+                stream: _wardrobeStream,
                 builder: (context, snapshot) {
                   Set<String> savedItems = {};
                   if (snapshot.hasData) {
@@ -75,7 +68,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                   }
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: kToolbarHeight + 10.0, bottom: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -287,6 +280,7 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
             }
           ),
         ),
+      ),
     );
   }
 }
