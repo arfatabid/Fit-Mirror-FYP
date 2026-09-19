@@ -124,27 +124,59 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
           Expanded(
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    color: Colors.grey.shade100,
-                    child: imagePath.startsWith('assets/')
-                        ? Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Icon(Icons.image, size: 40, color: Colors.grey.shade400),
-                          )
-                        : Image.file(
-                            File(imagePath),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Icon(Icons.broken_image, size: 40, color: Colors.grey.shade400),
-                          ),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: const EdgeInsets.all(10),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            InteractiveViewer(
+                              panEnabled: true,
+                              minScale: 1.0,
+                              maxScale: 4.0,
+                              child: imagePath.startsWith('assets/')
+                                  ? Image.asset(imagePath, fit: BoxFit.contain)
+                                  : Image.file(File(imagePath), fit: BoxFit.contain),
+                            ),
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.grey.shade100,
+                      child: imagePath.startsWith('assets/')
+                          ? Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image, size: 40, color: Colors.grey.shade400),
+                            )
+                          : Image.file(
+                              File(imagePath),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.broken_image, size: 40, color: Colors.grey.shade400),
+                            ),
+                    ),
                   ),
                 ),
                 Positioned(

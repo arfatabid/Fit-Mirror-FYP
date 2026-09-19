@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../services/auth_service.dart';
+import '../services/database_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
+  final DatabaseService _dbService = DatabaseService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -17,6 +20,23 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       await _authService.loginUser(email, password);
+      
+      final user = _auth.currentUser;
+      if (user != null) {
+        final isBlocked = await _dbService.isUserBlocked(user.uid);
+        if (isBlocked) {
+          await _auth.signOut();
+          _isLoading = false;
+          notifyListeners();
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Your account has been suspended by the Admin.")),
+            );
+          }
+          return false;
+        }
+      }
+      
       _isLoading = false;
       notifyListeners();
       return true;
@@ -109,7 +129,35 @@ class AuthProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      await _auth.signInWithCredential(credential);
+      final UserCredential cred = await _auth.signInWithCredential(credential);
+
+      // Save user to Firestore if they don't exist or to update info
+      if (cred.user != null) {
+        final isBlocked = await _dbService.isUserBlocked(cred.user!.uid);
+        if (isBlocked) {
+          await _auth.signOut();
+          _isLoading = false;
+          notifyListeners();
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Your account has been suspended by the Admin.")),
+            );
+          }
+          return;
+        }
+
+        final userDoc = await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).get();
+        if (!userDoc.exists) {
+          await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).set({
+            'uid': cred.user!.uid,
+            'email': cred.user!.email,
+            'displayName': cred.user!.displayName,
+            'role': 'user',
+            'isBlocked': false,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
+      }
 
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Google Login Successful!")));

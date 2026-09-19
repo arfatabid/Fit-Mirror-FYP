@@ -190,7 +190,7 @@ class LoginScreen extends StatelessWidget {
                             if (success && context.mounted) {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (_) => HomeScreen()),
+                                MaterialPageRoute(builder: (_) => const HomeScreen()),
                               );
                             }
                           },
@@ -229,10 +229,13 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () async {
                           await auth.signInWithGoogle(context);
                           if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => HomeScreen()),
-                            );
+                            final user = fb.FirebaseAuth.instance.currentUser;
+                            if (user != null) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                              );
+                            }
                           }
                         },
                       ),

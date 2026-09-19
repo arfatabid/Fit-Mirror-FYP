@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -19,7 +21,7 @@ class DatabaseService {
     }
   }
 
-  // Get chat history stream
+  // Get chat history 
   Stream<QuerySnapshot> getChatMessages() {
     final user = _auth.currentUser;
     if (user != null) {
@@ -52,7 +54,23 @@ class DatabaseService {
     }
   }
 
-  // Get wardrobe items stream
+  // Remove item from wardrobe by imagePath
+  Future<void> removeByImagePath(String imagePath) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final snapshot = await _db
+          .collection('users')
+          .doc(user.uid)
+          .collection('wardrobe')
+          .where('imagePath', isEqualTo: imagePath)
+          .get();
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+    }
+  }
+
+  // Get wardrobe items 
   Stream<QuerySnapshot> getWardrobeItems() {
     final user = _auth.currentUser;
     if (user != null) {
@@ -63,5 +81,44 @@ class DatabaseService {
           .snapshots();
     }
     return const Stream.empty();
+  }
+
+  // --- ADMIN FEATURES ---
+
+  // Check if a user is blocked
+  Future<bool> isUserBlocked(String uid) async {
+    final doc = await _db.collection('users').doc(uid).get();
+    if (doc.exists) {
+      return doc.data()?['isBlocked'] ?? false;
+    }
+    return false;
+  }
+
+  // Block/Unblock a user
+  Future<void> updateUserStatus(String uid, bool isBlocked) async {
+    await _db.collection('users').doc(uid).update({
+      'isBlocked': isBlocked,
+    });
+  }
+
+  // Analytics: Increment Try-On Count
+  Future<void> incrementTryOnCount() async {
+    final docRef = _db.collection('analytics').doc('stats');
+    
+    // Using a transaction to safely increment
+    await _db.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      if (!snapshot.exists) {
+        transaction.set(docRef, {'totalTryOns': 1});
+      } else {
+        final currentCount = snapshot.data()?['totalTryOns'] ?? 0;
+        transaction.update(docRef, {'totalTryOns': currentCount + 1});
+      }
+    });
+  }
+
+  // Get Analytics Stream
+  Stream<DocumentSnapshot> getAnalyticsStats() {
+    return _db.collection('analytics').doc('stats').snapshots();
   }
 }
