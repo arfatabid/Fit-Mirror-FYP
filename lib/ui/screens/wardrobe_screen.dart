@@ -32,10 +32,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primaryPurple),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

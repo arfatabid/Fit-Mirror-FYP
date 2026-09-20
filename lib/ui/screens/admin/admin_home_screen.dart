@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'manage_users_screen.dart';
+import 'add_product_screen.dart';
 import '../../services/database_seeder.dart';
 import '../login_screen.dart';
 
