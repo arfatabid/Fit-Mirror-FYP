@@ -9,7 +9,7 @@ class DatabaseService {
 
   User? get currentUser => _auth.currentUser;
 
-  // Save chat message
+  // Save message
   Future<void> saveChatMessage(String text, String role) async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -21,7 +21,7 @@ class DatabaseService {
     }
   }
 
-  // Get chat history 
+  // chat history
   Stream<QuerySnapshot> getChatMessages() {
     final user = _auth.currentUser;
     if (user != null) {
@@ -83,9 +83,9 @@ class DatabaseService {
     return const Stream.empty();
   }
 
-  // --- ADMIN FEATURES ---
+  //  Admin Side
 
-  // Check if a user is blocked
+  // Check if user is blocked
   Future<bool> isUserBlocked(String uid) async {
     final doc = await _db.collection('users').doc(uid).get();
     if (doc.exists) {
@@ -101,11 +101,11 @@ class DatabaseService {
     });
   }
 
-  // Analytics: Increment Try-On Count
+  // Increment Try-On Count
   Future<void> incrementTryOnCount() async {
     final docRef = _db.collection('analytics').doc('stats');
     
-    // Using a transaction to safely increment
+    // transaction to safely increment
     await _db.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) {
@@ -117,14 +117,14 @@ class DatabaseService {
     });
   }
 
-  // Get Analytics Stream
+  // Get Stream
   Stream<DocumentSnapshot> getAnalyticsStats() {
     return _db.collection('analytics').doc('stats').snapshots();
   }
 
-  // --- PRODUCT MANAGEMENT (ADMIN) ---
+  // Product Management (ADMIN)
 
-  // Upload product image to Firebase Storage and get URL
+  // Upload product image to Firebase Storage
   Future<String?> uploadProductImage(File imageFile, String brandName, String productName) async {
     try {
       final storageRef = FirebaseStorage.instance
@@ -163,7 +163,7 @@ class DatabaseService {
         .snapshots();
   }
 
-  // Get catalog items for a specific brand
+  // Get catalog items for specific brand
   Stream<QuerySnapshot> getBrandCatalogItems(String brandName) {
     return _db.collection('catalog')
         .where('brand', isEqualTo: brandName)
