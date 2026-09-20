@@ -89,7 +89,7 @@ class AuthProvider extends ChangeNotifier {
 
       if (!context.mounted) return false;
 
-      // Firebase  main errors
+      // Firebase errors
       String errorMessage = "An error occurred. Please try again.";
       if (e is FirebaseAuthException) {
         if (e.code == 'email-already-in-use') {
@@ -131,7 +131,7 @@ class AuthProvider extends ChangeNotifier {
 
       final UserCredential cred = await _auth.signInWithCredential(credential);
 
-      // Save user to Firestore if they don't exist or to update info
+      // Save user to Firestore
       if (cred.user != null) {
         final isBlocked = await _dbService.isUserBlocked(cred.user!.uid);
         if (isBlocked) {
