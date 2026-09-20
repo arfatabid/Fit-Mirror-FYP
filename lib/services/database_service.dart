@@ -125,20 +125,15 @@ class DatabaseService {
   // Product Management (ADMIN)
 
   // Upload product image to Firebase Storage
-  Future<String?> uploadProductImage(File imageFile, String brandName, String productName) async {
-    try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('Brands')
-          .child(brandName)
-          .child('$productName.png');
+  Future<String> uploadProductImage(File imageFile, String brandName, String productName) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('Brands')
+        .child(brandName)
+        .child('$productName.png');
 
-      final uploadTask = await storageRef.putFile(imageFile);
-      return await uploadTask.ref.getDownloadURL();
-    } catch (e) {
-      print("Error uploading image: $e");
-      return null;
-    }
+    final uploadTask = await storageRef.putFile(imageFile);
+    return await uploadTask.ref.getDownloadURL();
   }
 
   // Add Product to Firestore
