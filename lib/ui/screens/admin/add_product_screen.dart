@@ -49,11 +49,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
       final title = _titleController.text.trim();
 
       // 1. Upload Image
-      final imageUrl = await _dbService.uploadProductImage(_imageFile!, brandName, title);
+      final imageUrl = await _dbService.uploadProductImage(_imageFile!, brandName, title)
+          .timeout(const Duration(seconds: 5), onTimeout: () => throw Exception("Converting image to Base64 timed out."));
+
+      if (imageUrl.length > 900000) {
+        throw Exception("Image is too large! Please select a smaller image (under 700KB).");
+      }
 
       if (imageUrl != null) {
         // 2. Add to Catalog
-        await _dbService.addProduct(brandName, title, imageUrl);
+        await _dbService.addProduct(brandName, title, imageUrl)
+            .timeout(const Duration(seconds: 10), onTimeout: () => throw Exception("Firestore write timed out! Check your Firestore Security Rules."));
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -61,17 +67,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
           );
           Navigator.pop(context);
         }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to upload image.')),
-          );
-        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(
+            content: Text('Error: $e'),
+            duration: const Duration(seconds: 6),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {

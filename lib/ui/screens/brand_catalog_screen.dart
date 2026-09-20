@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../services/database_service.dart';
 
@@ -6,15 +7,32 @@ import 'virtual_try_on_screen.dart';
 class BrandCatalogScreen extends StatefulWidget {
   final String brandName;
 
-  const BrandCatalogScreen({super.key, required this.brandName});
+  const BrandCatalogScreen({Key? key, required this.brandName}) : super(key: key);
 
   @override
-  State<BrandCatalogScreen> createState() => _BrandCatalogScreenState();
+  _BrandCatalogScreenState createState() => _BrandCatalogScreenState();
 }
 
 class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
   final Color primaryPurple = const Color(0xFF5E35B1);
-  final Color accentPink = const Color(0xFFE91E63);
+  final Color accentPink = const Color(0xFFE040FB);
+  List<String> savedItems = [];
+
+  Widget _buildErrorIcon() {
+    return Container(
+      color: primaryPurple.withOpacity(0.08),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
+            const SizedBox(height: 4),
+            const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+  }
 
   String searchQuery = "";
   
@@ -177,47 +195,26 @@ class _BrandCatalogScreenState extends State<BrandCatalogScreen> {
                                       children: [
                                         ClipRRect(
                                           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                          child: item['image']!.startsWith('http')
-                                              ? Image.network(
-                                                  item['image']!,
+                                          child: item['image']!.startsWith('data:image')
+                                              ? Image.memory(
+                                                  base64Decode(item['image']!.split(',').last),
                                                   fit: BoxFit.cover,
                                                   width: double.infinity,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return Container(
-                                                      color: primaryPurple.withOpacity(0.08),
-                                                      child: Center(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
-                                                            const SizedBox(height: 4),
-                                                            const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
+                                                  errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
                                                 )
-                                              : Image.asset(
-                                                  item['image']!,
-                                                  fit: BoxFit.cover,
-                                                  width: double.infinity,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return Container(
-                                                      color: primaryPurple.withOpacity(0.08),
-                                                      child: Center(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            Icon(Icons.image_not_supported, size: 28, color: primaryPurple),
-                                                            const SizedBox(height: 4),
-                                                            const Text("Not Found", style: TextStyle(fontSize: 9, color: Colors.grey)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
+                                              : item['image']!.startsWith('http')
+                                                  ? Image.network(
+                                                      item['image']!,
+                                                      fit: BoxFit.cover,
+                                                      width: double.infinity,
+                                                      errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
+                                                    )
+                                                  : Image.asset(
+                                                      item['image']!,
+                                                      fit: BoxFit.cover,
+                                                      width: double.infinity,
+                                                      errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
+                                                    ),
                                         ),
                                         Positioned(
                                           top: 8,

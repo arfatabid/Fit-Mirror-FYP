@@ -1,6 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../../provider/auth_provider.dart';
 import 'brand_catalog_screen.dart';
 import 'virtual_try_on_screen.dart';
 import 'chat_screen.dart';
@@ -10,7 +13,7 @@ import 'login_screen.dart';
 
 import 'admin/manage_users_screen.dart';
 import 'admin/analytics_screen.dart';
-//import 'admin/add_product_screen.dart';
+import 'admin/add_product_screen.dart';
 import '../../services/database_seeder.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -366,13 +369,26 @@ class _HomeContentState extends State<_HomeContent> {
                 ],
               ),
               child: ClipOval(
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.store, color: primaryPurple, size: 28);
-                  },
-                ),
+                child: imagePath.startsWith('data:image')
+                    ? Image.memory(
+                        base64Decode(imagePath.split(',').last),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Icon(Icons.store, color: primaryPurple, size: 28),
+                      )
+                    : imagePath.startsWith('http')
+                        ? Image.network(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.store, color: primaryPurple, size: 28),
+                          )
+                        : Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.store, color: primaryPurple, size: 28),
+                          ),
               ),
             ),
             const SizedBox(height: 6),
@@ -408,19 +424,26 @@ class _HomeContentState extends State<_HomeContent> {
             // Background Image
             Positioned.fill(
               child: imagePath != null
-                  ? Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(
-                    child: Icon(
-                      icon ?? Icons.dry_cleaning,
-                      size: 65,
-                      color: primaryPurple,
-                    ),
-                  );
-                },
-              )
+                  ? imagePath.startsWith('data:image')
+                      ? Image.memory(
+                          base64Decode(imagePath.split(',').last),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                              child: Icon(icon ?? Icons.dry_cleaning, size: 65, color: primaryPurple)),
+                        )
+                      : imagePath.startsWith('http')
+                          ? Image.network(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Center(
+                                  child: Icon(icon ?? Icons.dry_cleaning, size: 65, color: primaryPurple)),
+                            )
+                          : Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Center(
+                                  child: Icon(icon ?? Icons.dry_cleaning, size: 65, color: primaryPurple)),
+                            )
                   : Center(
                 child: Icon(
                   icon ?? Icons.dry_cleaning,
@@ -534,7 +557,7 @@ class _HomeContentState extends State<_HomeContent> {
               title: const Text('Add New Product'),
               onTap: () {
                 Navigator.pop(context);
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProductScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProductScreen()));
               },
             ),
           ],

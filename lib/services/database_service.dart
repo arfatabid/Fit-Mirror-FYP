@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -124,16 +125,10 @@ class DatabaseService {
 
   // Product Management (ADMIN)
 
-  // Upload product image to Firebase Storage
   Future<String> uploadProductImage(File imageFile, String brandName, String productName) async {
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('Brands')
-        .child(brandName)
-        .child('$productName.png');
-
-    final uploadTask = await storageRef.putFile(imageFile);
-    return await uploadTask.ref.getDownloadURL();
+    final bytes = await imageFile.readAsBytes();
+    final base64String = base64Encode(bytes);
+    return "data:image/png;base64,$base64String";
   }
 
   // Add Product to Firestore

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 import 'dart:io';
 import '../../services/database_service.dart';
 import 'virtual_try_on_screen.dart';
@@ -135,9 +136,11 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                               panEnabled: true,
                               minScale: 1.0,
                               maxScale: 4.0,
-                              child: imagePath.startsWith('assets/')
-                                  ? Image.asset(imagePath, fit: BoxFit.contain)
-                                  : Image.file(File(imagePath), fit: BoxFit.contain),
+                              child: imagePath.startsWith('data:image')
+                                  ? Image.memory(base64Decode(imagePath.split(',').last), fit: BoxFit.contain)
+                                  : imagePath.startsWith('assets/')
+                                      ? Image.asset(imagePath, fit: BoxFit.contain)
+                                      : Image.file(File(imagePath), fit: BoxFit.contain),
                             ),
                             Positioned(
                               top: 10,
@@ -160,19 +163,26 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                     child: Container(
                       width: double.infinity,
                       color: Colors.grey.shade100,
-                      child: imagePath.startsWith('assets/')
-                          ? Image.asset(
-                              imagePath,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image, size: 40, color: Colors.grey.shade400),
-                            )
-                          : Image.file(
-                              File(imagePath),
+                      child: imagePath.startsWith('data:image')
+                          ? Image.memory(
+                              base64Decode(imagePath.split(',').last),
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(Icons.broken_image, size: 40, color: Colors.grey.shade400),
-                            ),
+                            )
+                          : imagePath.startsWith('assets/')
+                              ? Image.asset(
+                                  imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image, size: 40, color: Colors.grey.shade400),
+                                )
+                              : Image.file(
+                                  File(imagePath),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.broken_image, size: 40, color: Colors.grey.shade400),
+                                ),
                     ),
                   ),
                 ),

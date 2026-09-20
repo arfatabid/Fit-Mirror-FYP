@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
@@ -233,19 +234,26 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                                 Expanded(
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                    child: image.startsWith('http')
-                                        ? Image.network(
-                                            image,
+                                    child: image.startsWith('data:image')
+                                        ? Image.memory(
+                                            base64Decode(image.split(',').last),
                                             fit: BoxFit.cover,
                                             width: double.infinity,
                                             errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
                                           )
-                                        : Image.asset(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
-                                          ),
+                                        : image.startsWith('http')
+                                            ? Image.network(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+                                              )
+                                            : Image.asset(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+                                              ),
                                   ),
                                 ),
                                 Padding(
@@ -320,9 +328,11 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
         ),
       );
 
-      // Load Garment Image (from network or assets)
+      // Load Garment Image (from network, base64, or assets)
       List<int> originalGarmentBytes;
-      if (_selectedGarmentUrl!.startsWith('http')) {
+      if (_selectedGarmentUrl!.startsWith('data:image')) {
+        originalGarmentBytes = base64Decode(_selectedGarmentUrl!.split(',').last);
+      } else if (_selectedGarmentUrl!.startsWith('http')) {
         final garmentResponse = await http.get(Uri.parse(_selectedGarmentUrl!));
         if (garmentResponse.statusCode == 200) {
           originalGarmentBytes = garmentResponse.bodyBytes;
@@ -434,21 +444,27 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
                       child: _selectedGarmentUrl != null
                           ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: _selectedGarmentUrl!.startsWith('http')
-                            ? Image.network(
-                                _selectedGarmentUrl!,
+                        child: _selectedGarmentUrl!.startsWith('data:image')
+                            ? Image.memory(
+                                base64Decode(_selectedGarmentUrl!.split(',').last),
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.broken_image, color: primaryPurple, size: 30);
-                                },
+                                errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: primaryPurple, size: 30),
                               )
-                            : Image.asset(
-                                _selectedGarmentUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.broken_image, color: primaryPurple, size: 30);
-                                },
-                              ),
+                            : _selectedGarmentUrl!.startsWith('http')
+                                ? Image.network(
+                                    _selectedGarmentUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.broken_image, color: primaryPurple, size: 30);
+                                    },
+                                  )
+                                : Image.asset(
+                                    _selectedGarmentUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.broken_image, color: primaryPurple, size: 30);
+                                    },
+                                  ),
                       )
                           : Icon(Icons.checkroom, color: primaryPurple, size: 35),
                     ),
