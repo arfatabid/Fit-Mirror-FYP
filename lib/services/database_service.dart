@@ -121,4 +121,52 @@ class DatabaseService {
   Stream<DocumentSnapshot> getAnalyticsStats() {
     return _db.collection('analytics').doc('stats').snapshots();
   }
+
+  // --- PRODUCT MANAGEMENT (ADMIN) ---
+
+  // Upload product image to Firebase Storage and get URL
+  Future<String?> uploadProductImage(File imageFile, String brandName, String productName) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('Brands')
+          .child(brandName)
+          .child('$productName.png');
+
+      final uploadTask = await storageRef.putFile(imageFile);
+      return await uploadTask.ref.getDownloadURL();
+    } catch (e) {
+      print("Error uploading image: $e");
+      return null;
+    }
+  }
+
+  // Add Product to Firestore
+  Future<void> addProduct(String brandName, String productName, String imageUrl) async {
+    await _db.collection('catalog').add({
+      'brand': brandName,
+      'title': productName,
+      'image': imageUrl,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Delete Product from Firestore
+  Future<void> deleteProduct(String productID) async {
+    await _db.collection('catalog').doc(productID).delete();
+  }
+
+  // Get all catalog items
+  Stream<QuerySnapshot> getAllCatalogItems() {
+    return _db.collection('catalog')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
+  // Get catalog items for a specific brand
+  Stream<QuerySnapshot> getBrandCatalogItems(String brandName) {
+    return _db.collection('catalog')
+        .where('brand', isEqualTo: brandName)
+        .snapshots();
+  }
 }

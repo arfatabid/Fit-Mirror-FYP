@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'manage_users_screen.dart';
+import '../../services/database_seeder.dart';
 import '../login_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
@@ -69,6 +70,23 @@ class AdminHomeScreen extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 15),
+            _buildAdminCard(
+              context,
+              title: "Populate Database",
+              icon: Icons.cloud_upload,
+              color: Colors.orange,
+              onTap: () async {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Starting database seeding... Check console for progress.')),
+                );
+                await DatabaseSeeder.seedDatabase();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Database Seeding Completed!')),
+                  );
+                }
+              },
             ),
           ],
         ),

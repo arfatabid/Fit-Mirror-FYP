@@ -10,6 +10,7 @@ import 'login_screen.dart';
 
 import 'admin/manage_users_screen.dart';
 import 'admin/analytics_screen.dart';
+import '../../services/database_seeder.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -509,6 +510,22 @@ class _HomeContentState extends State<_HomeContent> {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AnalyticsScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cloud_upload, color: Colors.orange),
+              title: const Text('Populate Database'),
+              onTap: () async {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Starting database seeding... Check console for progress.')),
+                );
+                await DatabaseSeeder.seedDatabase();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Database Seeding Completed!')),
+                  );
+                }
               },
             ),
           ],

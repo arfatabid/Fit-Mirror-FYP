@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../services/database_service.dart';
-import '../../services/local_catalog_service.dart';
+
 
 class VirtualTryOnScreen extends StatefulWidget {
   final String? garmentImageUrl; // slected path in catalogue
@@ -186,10 +186,17 @@ class _VirtualTryOnScreenState extends State<VirtualTryOnScreen> {
               ),
               const SizedBox(height: 15),
               Expanded(
-                child: Builder(
-                  builder: (context) {
-                    final docs = LocalCatalogService.getBrandCatalogItems(brandName);
+                child: StreamBuilder<Object>(
+                  stream: DatabaseService().getBrandCatalogItems(brandName),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator(color: primaryPurple));
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text("Error loading garments."));
+                    }
                     
+                    final docs = (snapshot.data as dynamic)?.docs ?? [];
                     if (docs.isEmpty) {
                       return const Center(child: Text("No items available."));
                     }

@@ -16,13 +16,13 @@ class ManageUsersScreen extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').orderBy('createdAt', descending: true).snapshots(),
+        stream: FirebaseFirestore.instance.collection('users').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: primaryPurple));
           }
           if (snapshot.hasError) {
-            return const Center(child: Text("Error loading users."));
+            return Center(child: Text("Error: ${snapshot.error}"));
           }
           
           final users = snapshot.data?.docs ?? [];
