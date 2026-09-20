@@ -10,7 +10,7 @@ import 'login_screen.dart';
 
 import 'admin/manage_users_screen.dart';
 import 'admin/analytics_screen.dart';
-import 'admin/add_product_screen.dart';
+//import 'admin/add_product_screen.dart';
 import '../../services/database_seeder.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -534,7 +534,7 @@ class _HomeContentState extends State<_HomeContent> {
               title: const Text('Add New Product'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProductScreen()));
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => const AddProductScreen()));
               },
             ),
           ],
